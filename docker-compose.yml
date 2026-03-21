@@ -1,0 +1,107 @@
+services:
+  # REDIS
+  redis:
+    image: redis:7-alpine
+    container_name: practicecourt_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+    networks:
+      - practicecourt_net
+
+  # MYSQL
+  mysql:
+    image: mysql:8.0
+    container_name: practicecourt_mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: practicecourt
+      MYSQL_USER: pcuser
+      MYSQL_PASSWORD: pcpassword
+    ports:
+      - "3306:3306"
+    volumes:
+      - ./infrastructure/init.sql:/docker-entrypoint-initdb.d/init.sql:ro #eseguito automaticamente al primo avvio del container
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks:
+      - practicecourt_net
+
+  # FIELD_NODE
+  field_node:
+    build:
+      context: .
+      dockerfile:  field_node/Dockerfile
+    container_name: practicecourt_field
+    restart: unless-stopped
+    environment:
+      #DATABASE
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_NAME: practicecourt
+      DB_USER: pcuser
+      DB_PASSWORD: pcpassword
+      #REDIS
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+      #UTILTY NODE ADDRESS FOR 2PC
+      UTILITY_NODE_URL: http://utility_node:8002
+
+      NODE_ID: field_node
+    ports:
+      - "8001:8001"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - practicecourt_net
+
+  # UTILITY_NODE
+  utility_node:
+    build:
+      context: .
+      dockerfile: utility_node/Dockerfile
+    container_name: practicecourt_utility
+    restart: unless-stopped
+    environment:
+      #DATABASE
+      DB_HOST: mysql
+      DB_PORT: "3306"
+      DB_NAME: practicecourt
+      DB_USER: pcuser
+      DB_PASSWORD: pcpassword
+      #REDIS
+      REDIS_HOST: redis
+      REDIS_PORT: "6379"
+
+      NODE_ID: utility_node
+    ports:
+      - "8002:8002"
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    networks:
+      - practicecourt_net
+
+# VOLUMES AND NETWORKS
+volumes:
+  mysql_data:
+
+networks:
+  practicecourt_net:
+    driver: bridge

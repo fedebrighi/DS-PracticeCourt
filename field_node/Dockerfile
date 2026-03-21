@@ -16,8 +16,8 @@ COPY pyproject.toml poetry.lock ./
 RUN poetry install --only main --no-root
 
 COPY shared/ ./shared/
-COPY utility_node/app/ ./app/
+COPY field_node/app/ ./app/
 
-EXPOSE 8002
+EXPOSE 8001
 
-CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8002", "--reload"]
+CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8001", "--reload"]

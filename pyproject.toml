@@ -1,0 +1,30 @@
+[tool.poetry]
+name = "ds-practicecourt"
+version = "0.1.0"
+description = "Sistema distribuito web-based per la prenotazione di impianti sportivi"
+authors = ["Federico Brighi federico.brighi2@studio.unibo.it"]
+readme = "README.md"
+packages = [{ include = "shared" }]
+
+#DIPENDENZE DI PRODUZIONE
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = { extras = ["standard"], version = "^0.135.0" }
+uvicorn = { extras = ["standard"], version = "^0.34.0" }
+redis = { extras = ["hiredis"], version = "^5.2.0" }
+sqlalchemy = "^2.0.36"
+pymysql = { extras = ["rsa"], version = "^1.1.1" }
+pydantic = "^2.10.0"
+pydantic-settings = "^2.6.0"
+httpx = "^0.28.0"
+
+#DIPENDENZE DI SVILUPPO
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.3.0"
+pytest-asyncio = "^0.24.0"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

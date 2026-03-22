@@ -29,6 +29,7 @@ services:
     volumes:
       - ./infrastructure/init.sql:/docker-entrypoint-initdb.d/init.sql:ro #eseguito automaticamente al primo avvio del container
       - mysql_data:/var/lib/mysql
+      - ./shared:/app/shared
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-prootpassword"]
       interval: 10s
@@ -61,6 +62,8 @@ services:
       NODE_ID: field_node
     ports:
       - "8001:8001"
+    volumes:
+      - ./shared:/app/shared
     depends_on:
       mysql:
         condition: service_healthy

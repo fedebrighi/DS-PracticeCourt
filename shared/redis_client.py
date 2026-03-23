@@ -9,7 +9,7 @@ class RedisClientManager:
 
     def init(self) -> None:
         settings = get_settings()
-        self._pool = ConnectionPool.from_url(
+        self._pool = ConnectionPool.from_url( # CREO UN UNICO CONNECTION POOL, TUTTE LE RICHIESTE PESCHERANNO DA QUESTO
             settings.redis_url,
             max_connections = 20,
             socket_timeout = 5.0,
@@ -20,15 +20,15 @@ class RedisClientManager:
 
     async def close(self) -> None:
         if self._pool:
-            await self._pool.disconnect()
+            await self._pool.disconnect() # CHIUDE TUTTE LE CONNESSIONI APERTE NEL CONNECTION POOL
             self._pool = None
 
     def get_client(self) -> Redis:
         if self._pool is None:
             raise RuntimeError("Call .init() before using Redis")
-        return Redis(connection_pool=self._pool, decode_responses=True)
+        return Redis(connection_pool=self._pool, decode_responses=True) # OGNI CHIAMATA CREA UN CLIENT CHE CONDIVIDE IL POOL
 
 redis_manager = RedisClientManager()
 
 async def get_redis() -> Redis:
-    return redis_manager.get_client()
+    return redis_manager.get_client() # USATA DA OGNI ENDPOINT CHE USA REDIS

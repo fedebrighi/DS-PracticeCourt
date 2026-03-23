@@ -12,7 +12,7 @@ from sqlalchemy.pool import AsyncAdaptedQueuePool
 from shared.config import get_settings
 
 class Base(DeclarativeBase):
-    """Base class for all ORM models in the project."""
+    """Base class for all ORM models in the project that are going to inherit it"""
     pass
 
 class DatabaseSessionManager:
@@ -20,7 +20,7 @@ class DatabaseSessionManager:
         self._engine: Optional[AsyncEngine] = None
         self._session_factory: Optional[async_sessionmaker[AsyncSession]] = None
 
-    def init(self) -> None:
+    def init(self) -> None: # CREA LA CONNESSIONE FISICA AL DB E LA SESSION FACTORY, CHIAMATA SOLO UNA VOLTA
         settings = get_settings()
         self._engine = create_async_engine(
             settings.database_url,
@@ -32,20 +32,20 @@ class DatabaseSessionManager:
             echo = settings.debug,
         )
 
-        self._session_factory = async_sessionmaker(
+        self._session_factory = async_sessionmaker( # COLEI CHE PRODUCE LE SESSIONI ( IN CUI POI FACCIO LE OPERAZIONI SUL DB)
             bind = self._engine,
             class_ = AsyncSession,
             expire_on_commit = False,
             autoflush = False,
         )
 
-    async def close(self) -> None:
+    async def close(self) -> None:  # CHIUDE TUTTE LE CONNESSIONI AL DB
         if self._engine:
             await self._engine.dispose()
             self._engine = None
             self._session_factory = None
 
-    async def get_session(self) -> AsyncGenerator[AsyncSession, None]:
+    async def get_session(self) -> AsyncGenerator[AsyncSession, None]: # PRODUCE UNA SESSIONE PER OGNI RICHIESTA HTTP
         if self._session_factory is None:
             raise RuntimeError("Call .init() before using db.")
         async with self._session_factory() as session:
@@ -57,6 +57,6 @@ class DatabaseSessionManager:
 
 db_manager = DatabaseSessionManager()
 
-async def get_db() -> AsyncGenerator[AsyncSession, None]:
+async def get_db() -> AsyncGenerator[AsyncSession, None]: # INIETTA UNA SESSIONE DB NEGLI ENDPOINT CHE LA RICHIEDONO
     async for session in db_manager.get_session():
         yield session

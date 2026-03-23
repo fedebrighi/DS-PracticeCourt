@@ -4,7 +4,7 @@ from functools import lru_cache
 from pydantic import computed_field
 from pydantic_settings import BaseSettings
 
-class Settings(BaseSettings):
+class Settings(BaseSettings): # LEGGE I VALORI DALLE VARIABILI D'AMBIENTE CHE SONO STATE DEFINITE NEL .YML
     # DB
     db_host: str
     db_port: int = 3306
@@ -20,7 +20,7 @@ class Settings(BaseSettings):
     node_id: str = "unknown"
     debug: bool = False
 
-    @computed_field
+    @computed_field  # CAMPO CALCOLATO INTERNAMENTE, NON LETTO DALL'AMBIENTE
     @property
     def database_url(self) -> str:
         return(
@@ -32,8 +32,9 @@ class Settings(BaseSettings):
     @property
     def redis_url(self) -> str:
         return f"redis://{self.redis_host}:{self.redis_port}"
-    model_config = {"extra": "ignore"}
 
-@lru_cache
+    model_config = {"extra": "ignore"} # IGNORA VARIABILI D'AMBIENTE AGGIUNTIVE TROVATE NEL .YML
+
+@lru_cache # SERVE PER NON RILEGGERE L'AMBIENTE OGNI VOLTA
 def get_settings() -> Settings:
-    return Settings()
+    return Settings() # E' L'AMBIENTE CHE PASSA A LEI I VALORI INIETTATI DAL DOCKER, NON LO FACCIO IO A MANO

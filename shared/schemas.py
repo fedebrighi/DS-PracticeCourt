@@ -3,6 +3,8 @@ from datetime import datetime
 from enum import StrEnum
 from typing import Optional
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+from pygments.lexers import data
+
 
 # ENUMS
 
@@ -10,6 +12,7 @@ class BookingStatus(StrEnum):
     PENDING = "pending"
     CONFIRMED = "confirmed"
     CANCELLED = "cancelled"
+    FAILED = "failed"
 
 class _ORMBase(BaseModel): # ABILITA CONVERSIONE DIRETTA DA OGGETTI SQLALCHEMY A PYDANTIC
     model_config = ConfigDict(from_attributes=True)
@@ -20,30 +23,42 @@ class FieldBase(BaseModel): # CAMPI INVIATI DAL CLIENT QUANDO CREA/AGGIORNA UN C
     name: str = Field(..., min_length=1, max_length=100)
     location: str = Field(..., min_length=1, max_length=255)
     sport_type: str = Field(..., min_length=1, max_length=50)
-    price_per_hour: float = Field(..., gt=0)
+    price_per_hour: float = 0.0
 
 class FieldResponse(_ORMBase, FieldBase): # AGGIUNGE I CAMPI GENERATI DAL SERVER ALLA RISPOSTA
     model_config = ConfigDict(from_attributes=True) # MODIFICA NECESSARIA PER FAR SI CHE PYDANTIC LEGGA CORRETTAMENTE GLI ATTRIBUTI DELL OGGETTO ORM
     id: int
-    is_available: bool
+    is_active: bool
+    created_at: datetime
+
+    @field_validator("price_per_hour", mode="before")
+    @classmethod
+    def decimal_to_float(cls, v):
+        return float(v)
 
 # UTILITY
 
 class UtilityBase(BaseModel): # CAMPI INVIATI DAL CLIENT QUANDO CREA/AGGIORNA UN SERVIZIO
     name: str = Field(..., min_length=1, max_length=100)
     description:Optional[str] = Field(default=None, max_length=500)
-    price: float = Field(..., gt=0)
+    price_per_hour: float = 0.0
+    utility_type: float
 
 class UtilityResponse(_ORMBase, UtilityBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
-    is_available: bool
+    is_active: bool
+
+    @field_validator("price_per_hour", mode="before")
+    @classmethod
+    def decimal_to_float(cls, v):
+        return float(v)
 
 # FIELD BOOKING
 
 class FieldBookingRequest(BaseModel):
     field_id: int = Field(..., gt=0)
-    user_id: int = Field(..., gt=0)
+    user_id: str = Field(..., gt=0)
     start_time: datetime
     end_time: datetime
     utility_ids: list[int] = Field(default_factory=list)  # QUALI NODI COINVOLGEREMO NEL 2PC
@@ -64,7 +79,7 @@ class FieldBookingResponse(_ORMBase):  # QUELLO CHE IL SERVER RESTITUISCE INVECE
     start_time: datetime
     end_time: datetime
     status: BookingStatus
-    transaction_id: str
+    created_at: datetime
 
 # UTILITY BOOKING
 
@@ -72,7 +87,7 @@ class UtilityBookingResponse(_ORMBase):
     model_config = ConfigDict(from_attributes=True)
     id: int
     utility_id: int
-    field_booking_id: int
+    booking_id: int
     status: BookingStatus
 
 # GENERIC RESPONSES (USATE DA TUTTI GLI ENDPOINTS)

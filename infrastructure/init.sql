@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS fields (
     name VARCHAR(100) NOT NULL,
     sport_type ENUM('football', 'padel', 'basketball') NOT NULL,
     location VARCHAR(200) NOT NULL,
+    price_per_hour DECIMAL(6,2) NOT NULL DEFAULT 0.00,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY (id)

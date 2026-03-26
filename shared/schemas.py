@@ -23,6 +23,7 @@ class FieldBase(BaseModel): # CAMPI INVIATI DAL CLIENT QUANDO CREA/AGGIORNA UN C
     price_per_hour: float = Field(..., gt=0)
 
 class FieldResponse(_ORMBase, FieldBase): # AGGIUNGE I CAMPI GENERATI DAL SERVER ALLA RISPOSTA
+    model_config = ConfigDict(from_attributes=True) # MODIFICA NECESSARIA PER FAR SI CHE PYDANTIC LEGGA CORRETTAMENTE GLI ATTRIBUTI DELL OGGETTO ORM
     id: int
     is_available: bool
 
@@ -34,6 +35,7 @@ class UtilityBase(BaseModel): # CAMPI INVIATI DAL CLIENT QUANDO CREA/AGGIORNA UN
     price: float = Field(..., gt=0)
 
 class UtilityResponse(_ORMBase, UtilityBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     is_available: bool
 
@@ -55,6 +57,7 @@ class FieldBookingRequest(BaseModel):
         return end
 
 class FieldBookingResponse(_ORMBase):  # QUELLO CHE IL SERVER RESTITUISCE INVECE AL CLIENT
+    model_config = ConfigDict(from_attributes=True)
     id: int
     field_id: int
     user_id: int
@@ -66,6 +69,7 @@ class FieldBookingResponse(_ORMBase):  # QUELLO CHE IL SERVER RESTITUISCE INVECE
 # UTILITY BOOKING
 
 class UtilityBookingResponse(_ORMBase):
+    model_config = ConfigDict(from_attributes=True)
     id: int
     utility_id: int
     field_booking_id: int

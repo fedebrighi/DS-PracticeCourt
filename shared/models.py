@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Any, Optional
+from typing import Optional
 from sqlalchemy import (DateTime, Enum, Integer, String, Numeric, func)
 from sqlalchemy import Boolean, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -19,12 +19,9 @@ class Field(Base): # MAPPO IN OGGETTI PYTHON LE CLASSI DEL DATABASE GRAZIE ALL O
     sport_type: Mapped[str] = mapped_column(String(50), nullable = False)
     price_per_hour: Mapped[float] = mapped_column(Numeric(6,2), nullable = False, default=0.0)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable = False)
-    created_at: Mapped[bool] = mapped_column(DateTime, server_default=func.now(), nullable = False)
+    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now(), nullable = False)
 
 class FieldBooking(Base):
-    def __init__(self, **kw: Any):
-        super().__init__(**kw)
-        self.is_active = None
 
     __tablename__ =  "field_bookings"
     id: Mapped[int] = mapped_column(Integer, primary_key = True, autoincrement = True)
@@ -50,7 +47,7 @@ class Utility(Base):
         nullable=False
     )
     price_per_hour: Mapped[float] = mapped_column(Numeric(6, 2), nullable=False, default=0.00)
-    is_active: Mapped[bool] = mapped_column(Boolean, nullable = False)
+    is_active: Mapped[bool] = mapped_column(Boolean, nullable = False, default=True)
 
 class UtilityBooking(Base):
     __tablename__ =  "utility_bookings"

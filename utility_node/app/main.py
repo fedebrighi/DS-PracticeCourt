@@ -5,7 +5,7 @@ from shared.config import get_settings
 from shared.db import db_manager, get_db
 from shared.redis_client import redis_manager
 from shared.schemas import HealthResponse, UtilityResponse, UtilityBookingResponse, UtilityBase
-from utility_node.app.repositories import utility_repository, utility_booking_repository
+from app.repositories import utility_repository, utility_booking_repository
 
 # STESSE COSE CHE HO FATTO IN MAIN.PY DI FIELDNODE, QUESTO E' RELATIVO ALLE PRENOTAZIONI
 
@@ -49,6 +49,6 @@ async def create_utility_booking(data: UtilityBase, db: AsyncSession = Depends(g
 async def list_utility_bookings(db: AsyncSession = Depends(get_db)):
     return await utility_booking_repository.get_all(db)
 
-@app.get("/utility-bookings/by-field-booking/{booking_id}", response_model=UtilityBookingResponse) # RESTITUISCE PRENOTAZIONI DI UTILITIES RELATIVE
+@app.get("/utility-bookings/by-field-booking/{booking_id}", response_model=list[UtilityBookingResponse]) # RESTITUISCE PRENOTAZIONI DI UTILITIES RELATIVE
 async def get_by_field_booking(booking_id: int, db: AsyncSession = Depends(get_db)):                    # ALL ID DELLA PRENOTAZIONE DI UN CAMPO
     return await utility_booking_repository.get_by_field_booking(db, booking_id)

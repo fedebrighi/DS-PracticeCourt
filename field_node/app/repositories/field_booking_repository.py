@@ -1,4 +1,3 @@
-from typing import Optional
 from datetime import datetime
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -21,7 +20,6 @@ async def create( # CREAZIONE DI UN NUOVO CAMPO
         user_id: str,
         start_time: datetime,
         end_time: datetime,
-        transaction_id: Optional[str] = None,
         status: BookingStatus = BookingStatus.PENDING,
 ) -> FieldBooking:
     booking = FieldBooking(
@@ -29,7 +27,6 @@ async def create( # CREAZIONE DI UN NUOVO CAMPO
         user_id = user_id,
         start_time = start_time,
         end_time = end_time,
-        transaction_id = transaction_id,
         status = status,
     )
     db.add(booking)

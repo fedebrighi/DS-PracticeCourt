@@ -33,6 +33,7 @@ class FieldBooking(Base):
         default = BookingStatus.PENDING,
         nullable = False,
     )
+    created_at: Mapped[bool] = mapped_column(DateTime, server_default=func.now(), nullable = False)
 
 # GESTITI DA UTILITY NODE
 
@@ -46,7 +47,6 @@ class Utility(Base):
     )
     price_per_hour: Mapped[float] = mapped_column(Numeric(6, 2), nullable=False, default=0.00)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable = False)
-    created_at: Mapped[datetime] = mapped_column(DateTime, server_default=func.now() ,nullable = False)
 
 class UtilityBooking(Base):
     __tablename__ =  "utility_bookings"
@@ -58,4 +58,3 @@ class UtilityBooking(Base):
         default = BookingStatus.PENDING,
         nullable = False,
     )
-    transaction_id: Mapped[Optional[str]] = mapped_column(String(100), nullable = True)

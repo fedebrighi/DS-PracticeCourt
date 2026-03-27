@@ -55,8 +55,8 @@ class UtilityResponse(_ORMBase, UtilityBase):
 # FIELD BOOKING
 
 class FieldBookingRequest(BaseModel):
-    field_id: int = Field(..., gt=0)
-    user_id: str = Field(..., gt=0)
+    field_id: int
+    user_id: str
     start_time: datetime
     end_time: datetime
     utility_ids: list[int] = Field(default_factory=list)  # QUALI NODI COINVOLGEREMO NEL 2PC
@@ -73,7 +73,7 @@ class FieldBookingResponse(_ORMBase):  # QUELLO CHE IL SERVER RESTITUISCE INVECE
     model_config = ConfigDict(from_attributes=True)
     id: int
     field_id: int
-    user_id: int
+    user_id: str
     start_time: datetime
     end_time: datetime
     status: BookingStatus

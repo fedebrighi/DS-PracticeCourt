@@ -40,7 +40,7 @@ class UtilityBase(BaseModel): # CAMPI INVIATI DAL CLIENT QUANDO CREA/AGGIORNA UN
     name: str = Field(..., min_length=1, max_length=100)
     description:Optional[str] = Field(default=None, max_length=500)
     price_per_hour: float = 0.0
-    utility_type: float
+    utility_type: str
 
 class UtilityResponse(_ORMBase, UtilityBase):
     model_config = ConfigDict(from_attributes=True)

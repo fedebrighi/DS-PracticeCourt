@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Depends, HTTPException
 from contextlib import asynccontextmanager
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.repositories import field_repository, booking_repository
+from app.repositories import field_repository, field_booking_repository
 from shared.config import get_settings
 from shared.db import db_manager, get_db
 from shared.redis_client import redis_manager
@@ -46,11 +46,11 @@ async def create_field(data: FieldBase, db: AsyncSession = Depends(get_db)):
 
 @app.get("/bookings", response_model= list[FieldBookingResponse]) # RESTITUISCE TUTTE LE PRENOTAZIONI
 async def list_bookings(db: AsyncSession = Depends(get_db)):
-    return await booking_repository.get_all(db)
+    return await field_booking_repository.get_all(db)
 
 @app.get("/bookings/{booking_id}",response_model= FieldBookingResponse) # RESTITUISCE UNA PRENOTAZIONE PER ID
 async def get_booking(booking_id: int, db: AsyncSession = Depends(get_db)):
-    booking = await booking_repository.get_by_id(db, booking_id)
+    booking = await field_booking_repository.get_by_id(db, booking_id)
     if not booking:
         raise HTTPException(status_code=404, detail= "Booking not found!")
     return booking
@@ -63,7 +63,7 @@ async def create_booking(data: FieldBookingRequest, db: AsyncSession = Depends(g
     if not field.is_active:
         raise HTTPException(status_code=409, detail= "Field not available!") # 409 = CONFLITTO
 
-    booking = await booking_repository.create(
+    booking = await field_booking_repository.create(
         db,
         field_id = data.field_id,
         user_id = data.user_id,

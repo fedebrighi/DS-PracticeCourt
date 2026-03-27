@@ -5,7 +5,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from shared.models import FieldBooking
 from shared.schemas import BookingStatus
 
-
 # REPOSITORY PER LE OPERAZIONI CRUD SULLA TABELLA FIELDS BOOKING (COME FIELD_REPOSITORY)
 
 async def get_all(db: AsyncSession) -> list[FieldBooking]: # RESTITUISCE TUTTI I CAMPI PRESENTI NEL DB

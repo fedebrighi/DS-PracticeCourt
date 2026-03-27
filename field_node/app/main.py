@@ -17,7 +17,7 @@ async def lifespan(app: FastAPI):
     await db_manager.close()
     await redis_manager.close()
 
-app = FastAPI(title="Field Node", vintersion="0.1.0", lifespan=lifespan)
+app = FastAPI(title="Field Node", version="0.1.0", lifespan=lifespan)
 
 @app.get("/health", response_model= HealthResponse) # CONTROLLO DELLO STATO DEL NODO
 async def health():
@@ -57,7 +57,7 @@ async def get_booking(booking_id: int, db: AsyncSession = Depends(get_db)):
 
 @app.post("/bookings", response_model= FieldBookingResponse, status_code= 201) # CREA UNA PRENOTAZIONE
 async def create_booking(data: FieldBookingRequest, db: AsyncSession = Depends(get_db)):
-    field = await field_repository.get_by_id(db, data.field_id)
+    field = await field_booking_repository.get_by_id(db, data.field_id)
     if not field: # CONTROLLO DISPONIBILITA' CAMPO PRE PRENOTAZIONE
         raise HTTPException(status_code=404, detail= "Field not found!")
     if not field.is_active:

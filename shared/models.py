@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import Optional
+from typing import Any, Optional
 from sqlalchemy import (DateTime, Enum, Integer, String, Numeric, func)
 from sqlalchemy import Boolean, ForeignKey
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -22,6 +22,10 @@ class Field(Base): # MAPPO IN OGGETTI PYTHON LE CLASSI DEL DATABASE GRAZIE ALL O
     created_at: Mapped[bool] = mapped_column(DateTime, server_default=func.now(), nullable = False)
 
 class FieldBooking(Base):
+    def __init__(self, **kw: Any):
+        super().__init__(**kw)
+        self.is_active = None
+
     __tablename__ =  "field_bookings"
     id: Mapped[int] = mapped_column(Integer, primary_key = True, autoincrement = True)
     field_id: Mapped[int] = mapped_column(Integer, ForeignKey("fields.id"), nullable = False)

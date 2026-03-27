@@ -6,7 +6,6 @@ from shared.db import db_manager, get_db
 from shared.redis_client import redis_manager
 from shared.schemas import HealthResponse, UtilityResponse, UtilityBookingResponse, UtilityBase
 from app.repositories import utility_repository, utility_booking_repository
-
 # STESSE COSE CHE HO FATTO IN MAIN.PY DI FIELDNODE, QUESTO E' RELATIVO ALLE PRENOTAZIONI
 
 settings = get_settings()

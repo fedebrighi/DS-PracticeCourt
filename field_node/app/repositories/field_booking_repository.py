@@ -5,6 +5,7 @@ from sqlalchemy.sql.elements import and_
 from shared.locks import DistributedLock
 from shared.models import FieldBooking
 from shared.schemas import BookingStatus
+from redis.asyncio import Redis
 
 _LOCK_TTL_MS = 5_000  # 5 SECONDI PER LA SEZIONE CRITICA
 

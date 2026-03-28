@@ -1,10 +1,12 @@
 from fastapi import FastAPI, Depends, HTTPException
 from contextlib import asynccontextmanager
+
+from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.repositories import field_repository, field_booking_repository
 from shared.config import get_settings
 from shared.db import db_manager, get_db
-from shared.redis_client import redis_manager
+from shared.redis_client import redis_manager, get_redis
 from shared.schemas import HealthResponse, FieldResponse, FieldBase, FieldBookingResponse, FieldBookingRequest
 
 settings = get_settings()
@@ -56,18 +58,22 @@ async def get_booking(booking_id: int, db: AsyncSession = Depends(get_db)):
     return booking
 
 @app.post("/bookings", response_model= FieldBookingResponse, status_code= 201) # CREA UNA PRENOTAZIONE
-async def create_booking(data: FieldBookingRequest, db: AsyncSession = Depends(get_db)):
-    field = await field_booking_repository.get_by_id(db, data.field_id)
-    if not field: # CONTROLLO DISPONIBILITA' CAMPO PRE PRENOTAZIONE
+async def create_booking(data: FieldBookingRequest, db: AsyncSession = Depends(get_db), redis: Redis = Depends(get_redis)):
+    field = await field_repository.get_by_id(db, data.field_id) # VERIFICO CHE IL CAMPO ESISTA
+    if not field: # CONTROLLO DISPONIBILITA' CAMPO PRE-PRENOTAZIONE
         raise HTTPException(status_code=404, detail= "Field not found!")
     if not field.is_active:
         raise HTTPException(status_code=409, detail= "Field not available!") # 409 = CONFLITTO
 
     booking = await field_booking_repository.create(
         db,
+        redis,
         field_id = data.field_id,
         user_id = data.user_id,
         start_time = data.start_time,
         end_time = data.end_time
     )
+    if booking is None: # SE LOCK BUSY O SLOT OCCUPATO
+        raise HTTPException(status_code=409, detail="Slot not avaliable or lock busy, please retry!")
+
     return booking

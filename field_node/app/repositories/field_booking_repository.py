@@ -69,6 +69,27 @@ async def create( # CREAZIONE DI UNA NUOVA PRENOTAZIONE
     finally:
         await lock.release(lock_key, token) # RILASCIO IL LOCK
 
+# INSERISCE IN PENDING SENZA GESTIRE IL LOCK, CHE VIENE ACQUISITO DALL ENDOPOINT /bookings/2pc
+# PRIMA DI CHIAMARE QUESTA FUNZIONE E VIENE MANTENUTO PER TUTTA LA DURANTA DELLA TRANSAZIONE
+async def create_pending(
+        db: AsyncSession,
+        field_id: int,
+        user_id: str,
+        start_time: datetime,
+        end_time: datetime,
+) -> FieldBooking:
+    booking = FieldBooking(
+        field_id = field_id,
+        user_id = user_id,
+        start_time = start_time,
+        end_time = end_time,
+        status = BookingStatus.PENDING,
+    )
+    db.add(booking)
+    await db.commit()
+    await db.refresh(booking)
+    return booking
+
 async def update_status( # AGGIORNA LO STATO DI UNA PRENOTAZIONE ESISTENTE
         db: AsyncSession,
         booking_id: int,

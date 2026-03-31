@@ -12,6 +12,16 @@ class BookingStatus(StrEnum):
     CANCELLED = "cancelled"
     FAILED = "failed"
 
+class TwoPCVote(StrEnum): # VOTO DEL PARTECIPANTE NELLA FASE PREPARE
+    YES = "yes"
+    NO = "no"
+
+class TwoPCTransactionState(StrEnum): # STATI DELLA TRANSIZIONE IN REDIS
+    INIT = "init"
+    PREPARED = "prepared"
+    COMMITTED = "committed"
+    ABORTED = "aborted"
+
 class _ORMBase(BaseModel): # ABILITA CONVERSIONE DIRETTA DA OGGETTI SQLALCHEMY A PYDANTIC
     model_config = ConfigDict(from_attributes=True)
 
@@ -59,7 +69,7 @@ class FieldBookingRequest(BaseModel):
     user_id: str
     start_time: datetime
     end_time: datetime
-    utility_ids: list[int] = Field(default_factory=list)  # QUALI NODI COINVOLGEREMO NEL 2PC
+    utility_ids: list[int] = Field(default_factory=list)  # QUALI NODI COINVOLGIAMO NEL 2PC
 
     @field_validator("end_time")  # VALIDATORE AUTOMATICO PER AVERE END_TIME SUCCESSIVO A START_TIME
     @classmethod
@@ -87,6 +97,29 @@ class UtilityBookingResponse(_ORMBase):
     utility_id: int
     booking_id: int
     status: BookingStatus
+
+# GESTIONE DEL 2PC
+
+class PrepareRequest(BaseModel): # INVIATO AL PARTECIPANTE NELLA FASE PREPARE
+    field_booking_id: int
+    utility_id: int # ID DELLA UTILITY DA PRENOTARE
+
+class PrepareResponse(BaseModel): # RISPOSTA DEL PARTECIPANTE AL COORDINATORE
+    vote: TwoPCVote
+    utility_booking_id: Optional[int] = None
+    reason: Optional[str] = None
+
+class CommitRollbackRequest(BaseModel): # USATO SIA PER COMMIT CHE PER ROLLBACK
+    field_booking_id: int
+    utility_booking_ids: list[int] # QUESTE SONO LE PKs DI UTILITY_BOOKING DA AGGIORNARE
+
+class CommitRollbackResponse(BaseModel):
+    ok: bool
+
+# RISPOSTA FINALE AL CLIENT: FIELD_BOOKING + ESITO DEL 2PC
+class TwoPCBookingResponse(FieldBookingResponse):
+    utility_booking_ids: list[int] = Field(default_factory=list)
+    transaction_state: TwoPCTransactionState = TwoPCTransactionState.COMMITTED
 
 # GENERIC RESPONSES (USATE DA TUTTI GLI ENDPOINTS)
 

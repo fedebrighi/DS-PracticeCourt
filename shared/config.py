@@ -20,6 +20,9 @@ class Settings(BaseSettings): # LEGGE I VALORI DALLE VARIABILI D'AMBIENTE CHE SO
     node_id: str = "unknown"
     debug: bool = False
 
+    # PER FAR CAPIRE AL COORDINATORE FIELD NODE DOVE RAGGIUNGERE IL PARTECIPANTE UTILITY NODE
+    utility_node_url: str = "http://practicecourt_utility:8002"
+
     @computed_field  # CAMPO CALCOLATO INTERNAMENTE, NON LETTO DALL'AMBIENTE
     @property
     def database_url(self) -> str:

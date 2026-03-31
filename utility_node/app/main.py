@@ -4,8 +4,10 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from shared.config import get_settings
 from shared.db import db_manager, get_db
 from shared.redis_client import redis_manager
-from shared.schemas import HealthResponse, UtilityResponse, UtilityBookingResponse, UtilityBase
+from shared.schemas import HealthResponse, UtilityResponse, UtilityBookingResponse, UtilityBase, PrepareResponse, \
+    TwoPCVote, PrepareRequest, CommitRollbackResponse, CommitRollbackRequest, BookingStatus
 from app.repositories import utility_repository, utility_booking_repository
+
 # STESSE COSE CHE HO FATTO IN MAIN.PY DI FIELDNODE, QUESTO E' RELATIVO ALLE PRENOTAZIONI
 
 settings = get_settings()
@@ -51,3 +53,34 @@ async def list_utility_bookings(db: AsyncSession = Depends(get_db)):
 @app.get("/utility-bookings/by-field-booking/{booking_id}", response_model=list[UtilityBookingResponse]) # RESTITUISCE PRENOTAZIONI DI UTILITIES RELATIVE
 async def get_by_field_booking(booking_id: int, db: AsyncSession = Depends(get_db)):                    # ALL ID DELLA PRENOTAZIONE DI UN CAMPO
     return await utility_booking_repository.get_by_field_booking(db, booking_id)
+
+# ENDPOINTS DEL 2PC
+
+# CONTROLLA SE LA UTILITY E' DISPONIBILE E PRENOTA IN PENDING VOTANDO YES O NO
+@app.post("/internal/prepare", response_model=PrepareResponse)
+async def internal_prepare(req: PrepareRequest, db: AsyncSession = Depends(get_db)):
+    utility = await utility_repository.get_by_id(db, req.utility_id)
+    if not utility or not utility.is_active:
+        return PrepareResponse(vote=TwoPCVote.NO, reason=f"Utility {req.utility_id} not found or inactive!",)
+    try:
+        booking = await utility_booking_repository.create(db, req.utility_id, req.field_booking_id)
+        return PrepareResponse(vote=TwoPCVote.YES, utility_booking_id = booking.id)
+    except Exception as e:
+        return PrepareResponse(vote=TwoPCVote.NO, reason=str(e))
+
+# CONFERMA TUTTE LE UTILITY_BOOKINGS INDICATE AGGIORNANDO DA PENDING A CONFIRMED
+@app.post("/internal/commit", response_model=CommitRollbackResponse)
+async def internal_commit(req: CommitRollbackRequest, db: AsyncSession = Depends(get_db)):
+    for ub_id in req.utility_booking_ids:
+        await utility_booking_repository.update_status(db, ub_id, BookingStatus.CONFIRMED)
+    return CommitRollbackResponse(ok=True)
+
+# ANNULLA TUTTE LE UTILITY_BOOKINGS INDICATE AGGIORNANDO DA PENDING A CANCELLED
+@app.post("internal/rollback", response_model=CommitRollbackResponse)
+async def internal_rollback(req: CommitRollbackRequest, db: AsyncSession = Depends(get_db)):
+    for ub_id in req.utility_booking_ids:
+        await utility_booking_repository.update_status(db, ub_id, BookingStatus.CANCELLED)
+    return CommitRollbackResponse(ok=True)
+
+
+

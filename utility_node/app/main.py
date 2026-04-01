@@ -76,7 +76,7 @@ async def internal_commit(req: CommitRollbackRequest, db: AsyncSession = Depends
     return CommitRollbackResponse(ok=True)
 
 # ANNULLA TUTTE LE UTILITY_BOOKINGS INDICATE AGGIORNANDO DA PENDING A CANCELLED
-@app.post("internal/rollback", response_model=CommitRollbackResponse)
+@app.post("/internal/rollback", response_model=CommitRollbackResponse)
 async def internal_rollback(req: CommitRollbackRequest, db: AsyncSession = Depends(get_db)):
     for ub_id in req.utility_booking_ids:
         await utility_booking_repository.update_status(db, ub_id, BookingStatus.CANCELLED)

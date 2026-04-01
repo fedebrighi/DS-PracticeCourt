@@ -1,3 +1,5 @@
+import time
+
 import pytest
 import httpx
 
@@ -43,12 +45,12 @@ def test_prepare_nonexistent_utility_votes_no(inactive_utility_id):
     assert resp.status_code == 200
     body = resp.json()
     assert body["vote"] == "no"
-    assert body["utility_booking_id"] is not None
+    assert body["utility_booking_id"] is None
     assert body["reason"] is not None
 
 # DOPO IL PREPARE LA UTILITY BOOKING DEVE ESSERE PENDING NEL DB
 def test_prepare_creates_pending_booking(active_utility_id):
-    field_booking_id = 1003
+    field_booking_id = int(time.time())
     with httpx.Client() as client:
         resp = client.post(f"{UTILITY_BASE}/internal/prepare", json={
             "field_booking_id": field_booking_id,
@@ -91,7 +93,7 @@ def test_commit_updates_status_to_confirmed(active_utility_id):
 
 # DOPO PREPARE + ROLLBACK LA UTILITY BOOKING DEVE ESSERE CANCELLED
 def test_rollback_updates_status_to_cancelled(active_utility_id):
-    field_booking_id = 3001
+    field_booking_id = int(time.time())
     with httpx.Client() as client:
         prep = client.post(f"{UTILITY_BASE}/internal/prepare", json={
             "field_booking_id": field_booking_id,
@@ -110,9 +112,11 @@ def test_rollback_updates_status_to_cancelled(active_utility_id):
 
     with httpx.Client() as client:
         bookings = client.get(f"{UTILITY_BASE}/utility-bookings/by-field-booking/{field_booking_id}")
-
     results = bookings.json()
-    assert results[0]["status"] == "confirmed"
+
+    # CERCO IL BOOKING SPECIFICO PER ub_id
+    target = next(r for r in results if r["id"] == ub_id)
+    assert target["status"] == "cancelled"
 
 # SE FACCIO ROLLBACK CON UNA LISTA VUOTA -> OK DEVE ESSERE TRUE, NON DEVO ANNULLARE NESSUNA UTILITY
 def test_rollback_empty_ids_returns_ok():

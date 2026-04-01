@@ -2,7 +2,7 @@ from unittest.mock import MagicMock, AsyncMock
 import httpx
 import pytest
 from unittest.mock import patch
-from two_pc_coordinator import prepare_all, commit_all, rollback_all
+from field_node.app.two_pc_coordinator import prepare_all, commit_all, rollback_all
 
 UTILITY_URL = "http://fake-utility:8002"
 

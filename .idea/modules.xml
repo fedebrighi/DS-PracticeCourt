@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/DS-PracticeCourt.iml" filepath="$PROJECT_DIR$/.idea/DS-PracticeCourt.iml" />
+      <module fileurl="file://$PROJECT_DIR$/DS-PracticeCourt.iml" filepath="$PROJECT_DIR$/DS-PracticeCourt.iml" />
     </modules>
   </component>
 </project>

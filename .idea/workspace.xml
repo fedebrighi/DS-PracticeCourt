@@ -1,0 +1,351 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="SELECTIVE" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed errors on IDE settings">
+      <change afterPath="$PROJECT_DIR$/.idea/dataSources.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/test_2pc_end2end.py" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory">{
+  &quot;lastFilter&quot;: {
+    &quot;state&quot;: &quot;OPEN&quot;,
+    &quot;assignee&quot;: &quot;fedebrighi&quot;
+  }
+}</component>
+  <component name="GithubPullRequestsUISettings">{
+  &quot;selectedUrlAndAccountId&quot;: {
+    &quot;url&quot;: &quot;https://github.com/fedebrighi/DS-PracticeCourt.git&quot;,
+    &quot;accountId&quot;: &quot;4ad6c39a-c68e-4abf-98d3-6e719ff1baab&quot;
+  }
+}</component>
+  <component name="ProblemsViewState">
+    <option name="selectedTabId" value="CurrentFile" />
+  </component>
+  <component name="ProjectCodeStyleSettingsMigration">
+    <option name="version" value="2" />
+  </component>
+  <component name="ProjectColorInfo">{
+  &quot;associatedIndex&quot;: 6,
+  &quot;fromUser&quot;: false
+}</component>
+  <component name="ProjectId" id="3BD8Px867b65AVC7b4TyXwdJgkS" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
+    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
+    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/home/federico/Scrivania/DS-PracticeCourt/pyproject.toml&quot;,
+    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
+    &quot;project.structure.side.proportion&quot;: &quot;0.31494254&quot;,
+    &quot;settings.editor.selected.configurable&quot;: &quot;Errors&quot;,
+    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  },
+  &quot;keyToStringList&quot;: {
+    &quot;DatabaseDriversLRU&quot;: [
+      &quot;mysql&quot;
+    ]
+  }
+}</component>
+  <component name="SharedIndexes">
+    <attachedChunks>
+      <set>
+        <option value="bundled-jdk-30f59d01ecdd-2fc7cc6b9a17-intellij.indexing.shared.core-IU-253.32098.37" />
+        <option value="bundled-js-predefined-d6986cc7102b-9b0f141eb926-JavaScript-IU-253.32098.37" />
+      </set>
+    </attachedChunks>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="" />
+      <created>1774012260495</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1774012260495</updated>
+      <workItem from="1774012262251" duration="4114000" />
+      <workItem from="1774092211665" duration="4399000" />
+      <workItem from="1774096688504" duration="1298000" />
+      <workItem from="1774106466484" duration="1313000" />
+      <workItem from="1774173523395" duration="7133000" />
+      <workItem from="1774284413300" duration="5899000" />
+      <workItem from="1774542087588" duration="10367000" />
+      <workItem from="1774632010757" duration="8058000" />
+      <workItem from="1774691992641" duration="1240000" />
+      <workItem from="1774693244811" duration="9090000" />
+      <workItem from="1774857236345" duration="392000" />
+      <workItem from="1774878434985" duration="242000" />
+      <workItem from="1774878691236" duration="76000" />
+      <workItem from="1774878782616" duration="152000" />
+      <workItem from="1774975810470" duration="6904000" />
+      <workItem from="1775043392765" duration="9054000" />
+      <workItem from="1775579371186" duration="3858000" />
+      <workItem from="1775583246623" duration="574000" />
+      <workItem from="1775583837569" duration="232000" />
+      <workItem from="1775584086838" duration="4901000" />
+      <workItem from="1775663565838" duration="2303000" />
+    </task>
+    <task id="LOCAL-00001" summary="Added SQLAlchemy ORM models for all 4 tables">
+      <option name="closed" value="true" />
+      <created>1774545409419</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1774545409419</updated>
+    </task>
+    <task id="LOCAL-00002" summary="Updated schemas.py so Pydantic can read ORM obj's attributes correctly">
+      <option name="closed" value="true" />
+      <created>1774545900947</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1774545900947</updated>
+    </task>
+    <task id="LOCAL-00003" summary="Added repositories for Fields, updated main.py to use them. Fixed other files to correct errors coming by command line tests">
+      <option name="closed" value="true" />
+      <created>1774552967855</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1774552967855</updated>
+    </task>
+    <task id="LOCAL-00004" summary="Added repositories for Utilities (Utility + Utility Booking) and renamed booking_repository">
+      <option name="closed" value="true" />
+      <created>1774634160044</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1774634160044</updated>
+    </task>
+    <task id="LOCAL-00005" summary="Updated main.py with the new endpoints obtained with the utility's repositories">
+      <option name="closed" value="true" />
+      <created>1774635425922</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1774635425922</updated>
+    </task>
+    <task id="LOCAL-00006" summary="Updated some files based on errors occured during CMD tests">
+      <option name="closed" value="true" />
+      <created>1774638877175</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1774638877175</updated>
+    </task>
+    <task id="LOCAL-00007" summary="Fixed errors">
+      <option name="closed" value="true" />
+      <created>1774640867249</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1774640867249</updated>
+    </task>
+    <task id="LOCAL-00008" summary="Added an initial form of distributed lock using Redis">
+      <option name="closed" value="true" />
+      <created>1774694411522</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1774694411522</updated>
+    </task>
+    <task id="LOCAL-00009" summary="Updated field_booking_repository.py to use the implemented lock">
+      <option name="closed" value="true" />
+      <created>1774695409790</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1774695409790</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Updated main.py to use the implemented lock logic">
+      <option name="closed" value="true" />
+      <created>1774696147866</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1774696147866</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Added a test folder and file to test concurrency on the system">
+      <option name="closed" value="true" />
+      <created>1774703259903</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1774703259903</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Added 2PC schemas: TwoPCVote, PrepareRequest/Response, CommitRollbackRequest and TwoPCBookingResponse">
+      <option name="closed" value="true" />
+      <created>1774976831821</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1774976831821</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Added just a field utility_node_url in class Settings">
+      <option name="closed" value="true" />
+      <created>1774977365907</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1774977365907</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Implemented the 3 phases of 2PC: prepare, commit, rollback">
+      <option name="closed" value="true" />
+      <created>1774981487057</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1774981487057</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Added create_pending() function to handle the 2PC Coordinator">
+      <option name="closed" value="true" />
+      <created>1774981518444</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1774981518444</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Added the coordinator for the 2 Phase Commit (2PC) logical with all the 3 states">
+      <option name="closed" value="true" />
+      <created>1775047765601</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1775047765601</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Added Test file for internal prepare/commit/rollback on utility_node">
+      <option name="closed" value="true" />
+      <created>1775050798386</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1775050798386</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Added Test file for prepare/commit/rollback_all function of the 2pc coordinator">
+      <option name="closed" value="true" />
+      <created>1775058625207</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1775058625207</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Updated this files to resolve errors occured while testing the first test">
+      <option name="closed" value="true" />
+      <created>1775059627933</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1775059627933</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Updated this files to resolve errors occured while testing the second test">
+      <option name="closed" value="true" />
+      <created>1775061594276</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1775061594276</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Added sequence diagram for 2pc logic (useful for report)">
+      <option name="closed" value="true" />
+      <created>1775581905284</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1775581905284</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Added POST /bookings/2pc 2PC coordinator endpoint">
+      <option name="closed" value="true" />
+      <created>1775588054983</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1775588054983</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Fixed errors on IDE settings">
+      <option name="closed" value="true" />
+      <created>1775588089231</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1775588089231</updated>
+    </task>
+    <option name="localTasksCounter" value="24" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Added SQLAlchemy ORM models for all 4 tables" />
+    <MESSAGE value="Updated schemas.py so Pydantic can read ORM obj's attributes correctly" />
+    <MESSAGE value="Added repositories for Fields, updated main.py to use them. Fixed other files to correct errors coming by command line tests" />
+    <MESSAGE value="Added repositories for Utilities (Utility + Utility Booking)" />
+    <MESSAGE value="Added repositories for Utilities (Utility + Utility Booking) and renamed booking_repository" />
+    <MESSAGE value="Updated main.py with the new endpoints obtained with the utility's repositories" />
+    <MESSAGE value="Updated some files based on errors occured during CMD tests" />
+    <MESSAGE value="Fixed errors" />
+    <MESSAGE value="Added an initial form of distributed lock using Redis" />
+    <MESSAGE value="Updated field_booking_repository.py to use the implemented lock" />
+    <MESSAGE value="Updated main.py to use the implemented lock logic" />
+    <MESSAGE value="Added a test folder and file to test concurrency on the system" />
+    <MESSAGE value="Added 2PC schemas: TwoPCVote, PrepareRequest/Response, CommitRollbackRequest and TwoPCBookingResponse" />
+    <MESSAGE value="Added just a field utility_node_url in class Settings" />
+    <MESSAGE value="Implemented the 3 phases of 2PC: prepare, commit, rollback" />
+    <MESSAGE value="Added create_pending() function to handle the 2PC Coordinator" />
+    <MESSAGE value="Added the coordinator for the 2 Phase Commit (2PC) logical with all the 3 states" />
+    <MESSAGE value="Added Test file for internal prepare/commit/rollback on utility_node" />
+    <MESSAGE value="Added Test file for prepare/commit/rollback_all function of the 2pc coordinator" />
+    <MESSAGE value="Updated this files to resolve errors occured while testing the first test" />
+    <MESSAGE value="Updated this files to resolve errors occured while testing the second test" />
+    <MESSAGE value="Added sequence diagram for 2pc logic (useful for report)" />
+    <MESSAGE value="Added POST /bookings/2pc 2PC coordinator endpoint" />
+    <MESSAGE value="Fixed errors on IDE settings" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed errors on IDE settings" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/shared/config.py</url>
+          <line>3</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="XSLT-Support.FileAssociations.UIState">
+    <expand />
+    <select />
+  </component>
+</project>

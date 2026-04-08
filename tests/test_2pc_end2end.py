@@ -10,7 +10,7 @@ _BASE_TS = int(time.time())
 # UNICO SLOT TEMPORALE COMUNE
 def _slot(offset_hours: int = 0):
     base = datetime(2030, 6, 1, 10 + offset_hours, 0, 0, tzinfo = timezone.utc)
-    return base.isoformat(), (base + timedelta(hours=1)).isoformat()
+    return base.isoformat(), (base + timedelta(hours=1)).isoformat() # RITORNA (START, END)
 
 # CREO UN CAMPO
 @pytest.fixture(scope="module")
@@ -50,14 +50,14 @@ class TestTwoPCEndToEnd:
         })
         assert r.status_code == 201
         data = r.json()
-        assert data["status"] == "CONFIRMED"
+        assert data["status"] == "confirmed"
 
         # VERIFICO CHE SU UTILITY NODE L' UTILITY BOOKING RISULTI CONFERMATO
         ub = httpx.get(f"{UTILITY_URL}/utility-bookings/by-field-booking/{data['id']}")
         assert ub.status_code == 200
         bookings = ub.json()
         assert len(bookings) == 1
-        assert bookings[0]["status"] == "CONFIRMED"
+        assert bookings[0]["status"] == "confirmed"
 
 
     # SE UTILITY INESISTENTE -> VOTANO NO -> ABORTED -> ERRORE 409
@@ -79,7 +79,7 @@ class TestTwoPCEndToEnd:
             b for b in bookings
             if b["field_id"] == active_field_id
                and b["start_time"] == start
-               and b["status"] == "CONFIRMED"
+               and b["status"] == "confirmed"
         ]
         assert len(confirmed_in_slot) == 0
 
@@ -111,5 +111,5 @@ class TestTwoPCEndToEnd:
         })
 
         assert r.status_code == 201
-        assert r.json()["status"] == "CONFIRMED"
+        assert r.json()["status"] == "confirmed"
 

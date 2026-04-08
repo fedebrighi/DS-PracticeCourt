@@ -4,10 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added a new function that doesn't use the shared pool, because uses the pubsub logic">
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Updated the main files with the new pubsub logic">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field_node/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +114,7 @@
       <workItem from="1775583246623" duration="574000" />
       <workItem from="1775583837569" duration="232000" />
       <workItem from="1775584086838" duration="4901000" />
-      <workItem from="1775663565838" duration="7565000" />
+      <workItem from="1775663565838" duration="8393000" />
     </task>
     <task id="LOCAL-00001" summary="Added SQLAlchemy ORM models for all 4 tables">
       <option name="closed" value="true" />
@@ -333,14 +332,21 @@
       <option name="project" value="LOCAL" />
       <updated>1775672507219</updated>
     </task>
-    <option name="localTasksCounter" value="28" />
+    <task id="LOCAL-00028" summary="Updated the main files with the new pubsub logic">
+      <option name="closed" value="true" />
+      <created>1775673408814</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1775673408814</updated>
+    </task>
+    <option name="localTasksCounter" value="29" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added repositories for Utilities (Utility + Utility Booking)" />
     <MESSAGE value="Added repositories for Utilities (Utility + Utility Booking) and renamed booking_repository" />
     <MESSAGE value="Updated main.py with the new endpoints obtained with the utility's repositories" />
     <MESSAGE value="Updated some files based on errors occured during CMD tests" />
@@ -365,7 +371,8 @@
     <MESSAGE value="Fixed minor errors on test" />
     <MESSAGE value="Added a new file with a function to publish the events about bookings" />
     <MESSAGE value="Added a new function that doesn't use the shared pool, because uses the pubsub logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added a new function that doesn't use the shared pool, because uses the pubsub logic" />
+    <MESSAGE value="Updated the main files with the new pubsub logic" />
+    <option name="LAST_COMMIT_MESSAGE" value="Updated the main files with the new pubsub logic" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

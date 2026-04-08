@@ -1,11 +1,14 @@
+import asyncio
 import logging
 from typing import Optional
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Depends, HTTPException
+from fastapi import FastAPI, Depends, HTTPException, WebSocket, WebSocketDisconnect
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.staticfiles import StaticFiles
 
+from shared.events import AVAILABILITY_CHANNEL, publish_booking_event
 from shared.config import get_settings
 from shared.db import db_manager, get_db
 from shared.redis_client import redis_manager, get_redis
@@ -28,6 +31,9 @@ async def lifespan(app: FastAPI):
     await redis_manager.close()
 
 app = FastAPI(title="Field Node", version="0.1.0", lifespan=lifespan)
+
+# USO LA CARTELLA STATIC COME VOLUME DOCKER
+app.mount("/static", StaticFiles(directory="/app/static", html=True), name="static")
 
 @app.get("/health", response_model= HealthResponse) # CONTROLLO DELLO STATO DEL NODO
 async def health():
@@ -138,6 +144,7 @@ async def create_booking_2pc(data: FieldBookingRequest, db: AsyncSession = Depen
             # ALMENO UN NO PRESENTE, ROLLBACK SU TUTTI I PARTECIPANTI GIA PRESENTI
             await rollback_all(settings.utility_node_url, redis, field_booking_id, utility_booking_ids)
             await field_booking_repository.update_status(db, field_booking_id, BookingStatus.FAILED)
+            await publish_booking_event(redis, "booking_failed", field_booking_id, data.field_id, "failed")
             logger.warning("[2PC] txn=%d ABORTED (prepare failed)", field_booking_id)
             raise HTTPException(status_code=409, detail="2PC Aborted: one or more utilities are unavailable!")
 
@@ -146,6 +153,10 @@ async def create_booking_2pc(data: FieldBookingRequest, db: AsyncSession = Depen
         await commit_all(settings.utility_node_url, redis, field_booking_id, utility_booking_ids)
         committed = True
         logger.info("[2PC] txn=%d COMMITTED", field_booking_id)
+
+        # NOTIFICO TUTTI I CLIENT WS CHE LO SLOT È CONFERMATO
+        await publish_booking_event(redis, "booking_confirmed", field_booking_id, data.field_id, "confirmed")
+
         updated_booking = await field_booking_repository.get_by_id(db, field_booking_id)
         return updated_booking
 
@@ -174,3 +185,32 @@ async def create_booking_2pc(data: FieldBookingRequest, db: AsyncSession = Depen
     finally:
         # IL LOCK VIENE SEMPRE RILASCIATO, QUALUNQUE COSA ACCADA
         await lock.release(lock_key, token)
+
+@app.websocket("/ws/availability")
+async def ws_availability(websocket: WebSocket):
+    await websocket.accept()
+    logger.info("[WS] client connected")
+
+    pubsub_client = redis_manager.create_pubsub_client()
+    pubsub = pubsub_client.pubsub()
+    await pubsub.subscribe(AVAILABILITY_CHANNEL)
+
+    async def _listen() -> None:
+        try:
+            async for message in pubsub.listen():
+                if message["type"] == "message":
+                    await websocket.send_text(message["data"])
+        except Exception:
+            pass
+
+    task = asyncio.create_task(_listen())
+    try:
+        while True:
+            await websocket.receive_text()
+    except WebSocketDisconnect:
+        logger.info("[WS] client disconnected")
+    finally:
+        task.cancel()
+        await pubsub.unsubscribe(AVAILABILITY_CHANNEL)
+        await pubsub_client.aclose()
+        logger.info("[WS] pubsub client closed")

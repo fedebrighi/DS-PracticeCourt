@@ -4,7 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added Test 2pc end-to-end Test + some missing files from the last commit" />
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added a new function that doesn't use the shared pool, because uses the pubsub logic">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field_node/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/main.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -111,7 +115,7 @@
       <workItem from="1775583246623" duration="574000" />
       <workItem from="1775583837569" duration="232000" />
       <workItem from="1775584086838" duration="4901000" />
-      <workItem from="1775663565838" duration="2636000" />
+      <workItem from="1775663565838" duration="7565000" />
     </task>
     <task id="LOCAL-00001" summary="Added SQLAlchemy ORM models for all 4 tables">
       <option name="closed" value="true" />
@@ -305,16 +309,37 @@
       <option name="project" value="LOCAL" />
       <updated>1775666906422</updated>
     </task>
-    <option name="localTasksCounter" value="25" />
+    <task id="LOCAL-00025" summary="Fixed minor errors on test">
+      <option name="closed" value="true" />
+      <created>1775667340050</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1775667340050</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Added a new file with a function to publish the events about bookings">
+      <option name="closed" value="true" />
+      <created>1775669472063</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1775669472063</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Added a new function that doesn't use the shared pool, because uses the pubsub logic">
+      <option name="closed" value="true" />
+      <created>1775672507219</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1775672507219</updated>
+    </task>
+    <option name="localTasksCounter" value="28" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added SQLAlchemy ORM models for all 4 tables" />
-    <MESSAGE value="Updated schemas.py so Pydantic can read ORM obj's attributes correctly" />
-    <MESSAGE value="Added repositories for Fields, updated main.py to use them. Fixed other files to correct errors coming by command line tests" />
     <MESSAGE value="Added repositories for Utilities (Utility + Utility Booking)" />
     <MESSAGE value="Added repositories for Utilities (Utility + Utility Booking) and renamed booking_repository" />
     <MESSAGE value="Updated main.py with the new endpoints obtained with the utility's repositories" />
@@ -337,7 +362,10 @@
     <MESSAGE value="Added POST /bookings/2pc 2PC coordinator endpoint" />
     <MESSAGE value="Fixed errors on IDE settings" />
     <MESSAGE value="Added Test 2pc end-to-end Test + some missing files from the last commit" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added Test 2pc end-to-end Test + some missing files from the last commit" />
+    <MESSAGE value="Fixed minor errors on test" />
+    <MESSAGE value="Added a new file with a function to publish the events about bookings" />
+    <MESSAGE value="Added a new function that doesn't use the shared pool, because uses the pubsub logic" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a new function that doesn't use the shared pool, because uses the pubsub logic" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

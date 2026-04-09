@@ -1,1 +1,310 @@
-<h1>placeholder</h1>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>DS-PracticeCourt - Live Events</title>
+    <style>
+        :root {
+            --bg: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --primary: #0ea5e9;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --radius: 12px;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            line-height: 1.5;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        header {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 1rem 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        header h1 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        header h1 span {
+            color: var(--text-muted);
+            font-weight: 400;
+        }
+
+        #ws-status {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--text-muted);
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 99px;
+            padding: 6px 14px;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+        }
+
+        #ws-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #cbd5e1;
+            position: relative;
+        }
+
+        #ws-dot.connected {
+            background: var(--success);
+        }
+
+        #ws-dot.connected::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background: var(--success);
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); opacity: 0.8; }
+            100% { transform: scale(2.5); opacity: 0; }
+        }
+
+        main {
+            max-width: 800px;
+            margin: 2.5rem auto;
+            padding: 0 1.5rem;
+        }
+
+        .section-title {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--text-muted);
+            margin-bottom: 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        #events-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        #empty-state {
+            background: var(--card-bg);
+            border: 2px dashed var(--border);
+            border-radius: var(--radius);
+            padding: 3rem 1.5rem;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .event-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 1.25rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: cardIn 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .event-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+
+        @keyframes cardIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .event-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 3px; /* Square dots moderni */
+            margin-top: 6px;
+            flex-shrink: 0;
+        }
+
+        .event-dot.confirmed, .event-dot.active { background: var(--success); }
+        .event-dot.cancelled, .event-dot.error { background: var(--danger); }
+        .event-dot.pending { background: var(--warning); }
+
+        .event-body {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .event-type {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 6px;
+            text-transform: capitalize;
+        }
+
+        .event-type.confirmed, .event-type.active { color: #065f46; }
+        .event-type.cancelled, .event-type.error { color: #991b1b; }
+        .event-type.pending { color: #92400e; }
+
+        .event-meta {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            font-size: 12px;
+        }
+
+        .event-meta span {
+            background: var(--bg);
+            padding: 2px 8px;
+            border-radius: 4px;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .event-meta strong {
+            color: var(--text-main);
+            font-weight: 600;
+        }
+
+        .event-time {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-variant-numeric: tabular-nums;
+        }
+
+        #clear-btn {
+            margin-top: 2rem;
+            width: 100%;
+            background: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 10px;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #clear-btn:hover {
+            background: #fff;
+            border-color: var(--text-muted);
+            color: var(--text-main);
+        }
+
+        #clear-btn:active {
+            transform: scale(0.99);
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>DS-PracticeCourt <span>/ Live Events</span></h1>
+        <div id="ws-status">
+            <div id="ws-dot"></div>
+            <span id="ws-label">Disconnected</span>
+        </div>
+    </header>
+    <main>
+        <p class="section-title">Real Time Booking Events</p>
+        <div id="events-list">
+            <div id="empty-state">Waiting for events...Open the WebSocket and make a booking</div>
+        </div>
+        <button id="clear-btn" onclick="clearEvents()">Clean list</button>
+    </main>
+    <script>
+        const dot = document.getElementById('ws-dot')
+        const label = document.getElementById('ws-label')
+        const list = document.getElementById('events-list')
+        const emptyState = document.getElementById('empty-state')
+
+        let reconnectDelay = 1000; // BACKOFF
+
+        function connect() {
+            const ws = new WebSocket('ws://localhost:8001/ws/availability');
+            ws.onopen = () => {
+                dot.classList.add('connected');
+                label.textContent = 'Connected';
+                reconnectDelay = 1000; // CONNESSIONE RIUSCITA RESETTA IL BACKOFF
+            };
+
+            ws.onmessage = (e) => {
+                const data = JSON.parse(e.data);
+                addEvent(data);
+            };
+
+            ws.onclose = () => {
+                dot.classList.remove('connected');
+                label.textContent = `Disconnected - Reconnecting in ${reconnectDelay / 1000} seconds...`;
+                // RICONNESSIONE AUTOMATICA CON BACKOFF ESPONENZIALE (MAX 16 SECONDI)
+                setTimeout(() => {
+                    reconnectDelay = Math.min(reconnectDelay * 2, 16000);
+                    connect();
+                }, reconnectDelay);
+            }
+        }
+
+        function addEvent(data) {
+            // RIMUOVO EMPTY STATE ALLA PRIMA CARD
+            if (emptyState) emptyState.remove();
+            const status = data.status || 'unknown';
+            const time = new Date(data.timestamp).toLocaleTimeString('it-IT');
+            const card = document.createElement('div');
+            card.className = 'event-card';
+            card.innerHTML = `
+            <div class="event-dot ${status}"></div>
+            <div class="event-body">
+                <div class="event-type ${status}">${data.event_type}</div>
+                <div class="event-meta">
+                    <span>booking_id: <strong>${data.field_booking_id}</strong></span>
+                    <span>field_id: <strong>${data.field_id}</strong></span>
+                    <span>status: <strong>${status}</strong></span>
+                </div>
+            </div>
+            <div class="event-time">${time}</div>
+            `;
+            // INSERISCO IN CIMA ALLA LISTA (L'EVENTO PIÙ RECENTE VA IN ALTO)
+            list.insertBefore(card, list.firstChild);
+        }
+
+        function clearEvents() {
+            list.innerHTML = '<div id="empty-state">Waiting for events...</div>';
+        }
+        // AVVIO LA CONNESSIONE
+        connect();
+    </script>
+</body>
+</html>

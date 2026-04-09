@@ -4,9 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed errors">
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added a live events frontend page to check the correctness of what i implemented yesterday">
+      <change afterPath="$PROJECT_DIR$/tests/test_websocket.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field_node/static/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/index.html" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +115,7 @@
       <workItem from="1775583837569" duration="232000" />
       <workItem from="1775584086838" duration="4901000" />
       <workItem from="1775663565838" duration="8720000" />
-      <workItem from="1775727323850" duration="3046000" />
+      <workItem from="1775727323850" duration="6520000" />
     </task>
     <task id="LOCAL-00001" summary="Added SQLAlchemy ORM models for all 4 tables">
       <option name="closed" value="true" />
@@ -349,14 +349,21 @@
       <option name="project" value="LOCAL" />
       <updated>1775674106090</updated>
     </task>
-    <option name="localTasksCounter" value="30" />
+    <task id="LOCAL-00030" summary="Added a live events frontend page to check the correctness of what i implemented yesterday">
+      <option name="closed" value="true" />
+      <created>1775730443791</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1775730443792</updated>
+    </task>
+    <option name="localTasksCounter" value="31" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added repositories for Utilities (Utility + Utility Booking) and renamed booking_repository" />
     <MESSAGE value="Updated main.py with the new endpoints obtained with the utility's repositories" />
     <MESSAGE value="Updated some files based on errors occured during CMD tests" />
     <MESSAGE value="Added an initial form of distributed lock using Redis" />
@@ -381,7 +388,8 @@
     <MESSAGE value="Added a new function that doesn't use the shared pool, because uses the pubsub logic" />
     <MESSAGE value="Updated the main files with the new pubsub logic" />
     <MESSAGE value="Fixed errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed errors" />
+    <MESSAGE value="Added a live events frontend page to check the correctness of what i implemented yesterday" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added a live events frontend page to check the correctness of what i implemented yesterday" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

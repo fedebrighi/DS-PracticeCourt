@@ -1,6 +1,6 @@
 import logging
 import sys
-from config import get_settings
+from shared.config import get_settings
 
 
 def setup_logging() -> None:

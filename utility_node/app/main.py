@@ -7,13 +7,15 @@ from shared.redis_client import redis_manager
 from shared.schemas import HealthResponse, UtilityResponse, UtilityBookingResponse, UtilityBase, PrepareResponse, \
     TwoPCVote, PrepareRequest, CommitRollbackResponse, CommitRollbackRequest, BookingStatus
 from app.repositories import utility_repository, utility_booking_repository
+from shared.logging_config import setup_logging
 
-# STESSE COSE CHE HO FATTO IN MAIN.PY DI FIELDNODE, QUESTO E' RELATIVO ALLE PRENOTAZIONI
+# STESSE COSE CHE HO FATTO IN MAIN.PY DI FIELDNODE, QUESTO È RELATIVO ALLE PRENOTAZIONI
 
 settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
+    setup_logging()
     db_manager.init()
     redis_manager.init()
     yield
@@ -30,7 +32,7 @@ async def health():
 async def list_utilities(db: AsyncSession = Depends(get_db)):
     return await utility_repository.get_all(db)
 
-@app.get("/utilities/{utility_id}", response_model=UtilityResponse) # RESTITUISCE UTILITIES RELATIVE AD UNO SPECIFICO ID
+@app.get("/utilities/{utility_id}", response_model=UtilityResponse) # RESTITUISCE UTILITIES RELATIVE A UNO SPECIFICO ID
 async def get_utility(utility_id: int, db: AsyncSession = Depends(get_db)):
     utility = await utility_repository.get_by_id(db, utility_id)
     if not utility:
@@ -56,7 +58,7 @@ async def get_by_field_booking(booking_id: int, db: AsyncSession = Depends(get_d
 
 # ENDPOINTS DEL 2PC
 
-# CONTROLLA SE LA UTILITY E' DISPONIBILE E PRENOTA IN PENDING VOTANDO YES O NO
+# CONTROLLA SE LA UTILITY È DISPONIBILE E PRENOTA IN PENDING VOTANDO YES O NO
 @app.post("/internal/prepare", response_model=PrepareResponse)
 async def internal_prepare(req: PrepareRequest, db: AsyncSession = Depends(get_db)):
     utility = await utility_repository.get_by_id(db, req.utility_id)

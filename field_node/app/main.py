@@ -18,14 +18,13 @@ from shared.logging_config import setup_logging
 from app.two_pc_coordinator import prepare_all, rollback_all, commit_all
 from app.repositories import field_repository, field_booking_repository
 
-
+setup_logging()
 logger = logging.getLogger(__name__)
 settings = get_settings()
 _2PC_LOCK_TTL_MS = 30_000
 
 @asynccontextmanager  # GESTIONE DI AVVIO E SPEGNIMENTO RISORSE PER LE RICHIESTE
 async def lifespan(app: FastAPI):
-    setup_logging()
     db_manager.init()
     redis_manager.init()
     yield

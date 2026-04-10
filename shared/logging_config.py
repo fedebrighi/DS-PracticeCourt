@@ -1,7 +1,7 @@
 import logging
 import sys
 from shared.config import get_settings
-
+import time
 
 def setup_logging() -> None:
     # CONFIGURO IL LOGGING GLOBALE DEL NODO, CHIAMATA UNA VOLTA SOLO NEL LIFESPAN DI OGNI NODO
@@ -9,10 +9,13 @@ def setup_logging() -> None:
     log_level = logging.DEBUG if settings.debug else logging.INFO
 
     # ASCTIME È IL TIMESTAMP, NAME È IL MODULO
-    frmt = "%(asctime)s | %(levelname)-8s | {node} | %(name)s | %(message)s".format(node=settings.node_id)
+    frmt = "%(asctime)s | %(levelname)s | {node} | %(name)s | %(message)s".format(node=settings.node_id)
+
+    formatter = logging.Formatter(frmt, datefmt="%Y-%m-%d T: %H:%M:%S")
+    formatter.converter = time.localtime
 
     handler = logging.StreamHandler(sys.stdout)
-    handler.setFormatter(logging.Formatter(frmt, datefmt="%Y-%m-%dT%H:%M:%S"))
+    handler.setFormatter(formatter)
 
     # RIMUOVO HANDLER PRECEDENTI PRIMA DI CONFIGURARE PER EVITARE DUPLICATI
     root = logging.getLogger()

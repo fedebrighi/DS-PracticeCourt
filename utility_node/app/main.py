@@ -11,11 +11,12 @@ from shared.logging_config import setup_logging
 
 # STESSE COSE CHE HO FATTO IN MAIN.PY DI FIELDNODE, QUESTO È RELATIVO ALLE PRENOTAZIONI
 
+setup_logging()
+
 settings = get_settings()
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    setup_logging()
     db_manager.init()
     redis_manager.init()
     yield

@@ -56,6 +56,9 @@ services:
       #REDIS
       REDIS_HOST: redis
       REDIS_PORT: "6379"
+
+      TZ: Europe/Rome
+
       #UTILTY NODE ADDRESS FOR 2PC
       UTILITY_NODE_URL: http://utility_node:8002
 
@@ -65,6 +68,7 @@ services:
     volumes:
       - ./shared:/app/shared
       - ./field_node/static:/app/static
+      - /etc/localtime:/etc/localtime:ro
     depends_on:
       mysql:
         condition: service_healthy
@@ -91,6 +95,8 @@ services:
       REDIS_HOST: redis
       REDIS_PORT: "6379"
 
+      TZ: Europe/Rome
+
       NODE_ID: utility_node
     ports:
       - "8002:8002"
@@ -101,6 +107,9 @@ services:
         condition: service_healthy
     networks:
       - practicecourt_net
+    volumes:
+      - ./shared:/app/shared
+      - /etc/localtime:/etc/localtime:ro
 
 # VOLUMES AND NETWORKS
 volumes:

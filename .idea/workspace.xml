@@ -4,8 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Updated mains with setup for logging">
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed errors occurred during terminal tests">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/docker-compose.yml" beforeDir="false" afterPath="$PROJECT_DIR$/docker-compose.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field_node/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/shared/logging_config.py" beforeDir="false" afterPath="$PROJECT_DIR$/shared/logging_config.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utility_node/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/utility_node/app/main.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -115,7 +119,7 @@
       <workItem from="1775584086838" duration="4901000" />
       <workItem from="1775663565838" duration="8720000" />
       <workItem from="1775727323850" duration="7425000" />
-      <workItem from="1775839309089" duration="1972000" />
+      <workItem from="1775839309089" duration="3232000" />
     </task>
     <task id="LOCAL-00001" summary="Added SQLAlchemy ORM models for all 4 tables">
       <option name="closed" value="true" />
@@ -381,15 +385,21 @@
       <option name="project" value="LOCAL" />
       <updated>1775841151482</updated>
     </task>
-    <option name="localTasksCounter" value="34" />
+    <task id="LOCAL-00034" summary="Fixed small error">
+      <option name="closed" value="true" />
+      <created>1775841296080</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1775841296080</updated>
+    </task>
+    <option name="localTasksCounter" value="35" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Updated field_booking_repository.py to use the implemented lock" />
-    <MESSAGE value="Updated main.py to use the implemented lock logic" />
     <MESSAGE value="Added a test folder and file to test concurrency on the system" />
     <MESSAGE value="Added 2PC schemas: TwoPCVote, PrepareRequest/Response, CommitRollbackRequest and TwoPCBookingResponse" />
     <MESSAGE value="Added just a field utility_node_url in class Settings" />
@@ -413,7 +423,9 @@
     <MESSAGE value="Added a test for the web sockets logic implemented" />
     <MESSAGE value="Added setup for logging messages" />
     <MESSAGE value="Updated mains with setup for logging" />
-    <option name="LAST_COMMIT_MESSAGE" value="Updated mains with setup for logging" />
+    <MESSAGE value="Fixed small error" />
+    <MESSAGE value="Fixed errors occurred during terminal tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed errors occurred during terminal tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

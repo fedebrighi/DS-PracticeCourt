@@ -4,11 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed errors occurred while terminal testing">
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Modified pyproject.toml adding asyncio-mode = &quot;auto&quot; to fix test errors">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/app/recovery.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/recovery.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/shared/db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/shared/redis_client.py" beforeDir="false" afterPath="$PROJECT_DIR$/shared/redis_client.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/utility_node/app/repositories/utility_booking_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/utility_node/app/repositories/utility_booking_repository.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -119,7 +118,7 @@
       <workItem from="1775663565838" duration="8720000" />
       <workItem from="1775727323850" duration="7425000" />
       <workItem from="1775839309089" duration="5504000" />
-      <workItem from="1775898376837" duration="3772000" />
+      <workItem from="1775898376837" duration="9121000" />
     </task>
     <task id="LOCAL-00001" summary="Added SQLAlchemy ORM models for all 4 tables">
       <option name="closed" value="true" />
@@ -433,16 +432,37 @@
       <option name="project" value="LOCAL" />
       <updated>1775901448871</updated>
     </task>
-    <option name="localTasksCounter" value="40" />
+    <task id="LOCAL-00040" summary="Fixed session() context manager and get_client() for recovery job">
+      <option name="closed" value="true" />
+      <created>1775902241543</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1775902241543</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Added Test for Fault Tolerance and Recovery">
+      <option name="closed" value="true" />
+      <created>1775936252402</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1775936252402</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Modified pyproject.toml adding asyncio-mode = &quot;auto&quot; to fix test errors">
+      <option name="closed" value="true" />
+      <created>1775936400422</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1775936400422</updated>
+    </task>
+    <option name="localTasksCounter" value="43" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added create_pending() function to handle the 2PC Coordinator" />
-    <MESSAGE value="Added the coordinator for the 2 Phase Commit (2PC) logical with all the 3 states" />
-    <MESSAGE value="Added Test file for internal prepare/commit/rollback on utility_node" />
     <MESSAGE value="Added Test file for prepare/commit/rollback_all function of the 2pc coordinator" />
     <MESSAGE value="Updated this files to resolve errors occured while testing the first test" />
     <MESSAGE value="Updated this files to resolve errors occured while testing the second test" />
@@ -465,7 +485,10 @@
     <MESSAGE value="Added to main the recovery logic + new recovery endpoint" />
     <MESSAGE value="Added a DB Session for the recovery job" />
     <MESSAGE value="Fixed errors occurred while terminal testing" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed errors occurred while terminal testing" />
+    <MESSAGE value="Fixed session() context manager and get_client() for recovery job" />
+    <MESSAGE value="Added Test for Fault Tolerance and Recovery" />
+    <MESSAGE value="Modified pyproject.toml adding asyncio-mode = &quot;auto&quot; to fix test errors" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modified pyproject.toml adding asyncio-mode = &quot;auto&quot; to fix test errors" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

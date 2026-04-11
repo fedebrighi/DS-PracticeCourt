@@ -1,4 +1,4 @@
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.ext.asyncio import AsyncSession
 from shared.models import UtilityBooking
 from shared.schemas import BookingStatus
@@ -35,14 +35,14 @@ async def update_status(  # AGGIORNO LO STATO DELLA PRENOTAZIONE UTILITY
         db: AsyncSession,
         booking_id: int,
         status: BookingStatus,
-) -> UtilityBooking | None:
+) -> type[UtilityBooking] | None:
     result = await db.execute(
-        select(UtilityBooking).where(UtilityBooking.id == booking_id)
+        update(UtilityBooking)
+        .where(UtilityBooking.id == booking_id)
+        .values(status=status)
     )
-    booking = result.scalar_one_or_none()
-    if not booking:
-        return None
-    booking.status = status
     await db.commit()
-    await db.refresh(booking)
+    if result.rowcount == 0:
+        raise ValueError(f"UtilityBooking {booking_id} not found!")
+    booking = await db.get(UtilityBooking, booking_id)
     return booking

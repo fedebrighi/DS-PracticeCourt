@@ -36,8 +36,6 @@ async def _recover_one(
                 await field_booking_repository.update_status(db, field_booking_id, BookingStatus.FAILED)
     except Exception as exc:
         logger.error("[RECOVERY] txn=%d unexpected error: %s", field_booking_id, exc)
-    finally:
-        await redis.aclose()
 
 async def run_recovery(utility_node_url: str) -> None:
     # SCANSIONO REDIS CERCANDO LE TRANSAZIONI IN STATO PREPARED PER RECUPERARLE
@@ -73,6 +71,8 @@ async def run_recovery(utility_node_url: str) -> None:
             logger.debug("[RECOVERY] job completed: %d transaction recovered!", recovered)
     except Exception as exc:
         logger.error("[RECOVERY] error while Redis scanning: %s", exc)
+    finally:
+        await redis.aclose()
 
 async def recovery_loop(utility_node_url: str):
     # LOOP INFINITO CHE CHIAMA RUN_RECOVRY OGNI 60 SECONDI, AVVIATO COME ASYNCIO.CREATE_TASK

@@ -4,8 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added recovery logic">
-      <change beforePath="$PROJECT_DIR$/field_node/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/main.py" afterDir="false" />
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added to main the recovery logic + new recovery endpoint">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/db.py" beforeDir="false" afterPath="$PROJECT_DIR$/shared/db.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -116,7 +117,7 @@
       <workItem from="1775663565838" duration="8720000" />
       <workItem from="1775727323850" duration="7425000" />
       <workItem from="1775839309089" duration="5504000" />
-      <workItem from="1775898376837" duration="458000" />
+      <workItem from="1775898376837" duration="1747000" />
     </task>
     <task id="LOCAL-00001" summary="Added SQLAlchemy ORM models for all 4 tables">
       <option name="closed" value="true" />
@@ -406,14 +407,21 @@
       <option name="project" value="LOCAL" />
       <updated>1775898448708</updated>
     </task>
-    <option name="localTasksCounter" value="37" />
+    <task id="LOCAL-00037" summary="Added to main the recovery logic + new recovery endpoint">
+      <option name="closed" value="true" />
+      <created>1775899022412</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1775899022412</updated>
+    </task>
+    <option name="localTasksCounter" value="38" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added 2PC schemas: TwoPCVote, PrepareRequest/Response, CommitRollbackRequest and TwoPCBookingResponse" />
     <MESSAGE value="Added just a field utility_node_url in class Settings" />
     <MESSAGE value="Implemented the 3 phases of 2PC: prepare, commit, rollback" />
     <MESSAGE value="Added create_pending() function to handle the 2PC Coordinator" />
@@ -438,7 +446,8 @@
     <MESSAGE value="Fixed small error" />
     <MESSAGE value="Fixed errors occurred during terminal tests" />
     <MESSAGE value="Added recovery logic" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added recovery logic" />
+    <MESSAGE value="Added to main the recovery logic + new recovery endpoint" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added to main the recovery logic + new recovery endpoint" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

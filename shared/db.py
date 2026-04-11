@@ -10,6 +10,8 @@ from sqlalchemy.ext.asyncio import (
 from sqlalchemy.orm import DeclarativeBase
 from sqlalchemy.pool import AsyncAdaptedQueuePool
 from shared.config import get_settings
+from contextlib import asynccontextmanager
+
 
 class Base(DeclarativeBase):
     """Base class for all ORM models in the project that are going to inherit it"""
@@ -54,6 +56,14 @@ class DatabaseSessionManager:
             except Exception:
                 await session.rollback()
                 raise
+    # CONTEXT MANAGER PER USARE UNA SESSIONE DB FUORI DAL CONTESTO DI UNA REQUEST, USATO DAL RECOVERY JOB
+    @asynccontextmanager
+    async def session(self):
+        if self._session_factory is None:
+            raise RuntimeError("Call .init() before using db")
+        async with self._session_factory() as db:
+            async with db.begin():
+                yield db
 
 db_manager = DatabaseSessionManager()
 

@@ -62,8 +62,11 @@ class DatabaseSessionManager:
         if self._session_factory is None:
             raise RuntimeError("Call .init() before using db")
         async with self._session_factory() as db:
-            async with db.begin():
+            try:
                 yield db
+            except Exception:
+                await db.rollback()
+                raise
 
 db_manager = DatabaseSessionManager()
 

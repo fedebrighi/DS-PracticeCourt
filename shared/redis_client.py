@@ -23,10 +23,13 @@ class RedisClientManager:
             await self._pool.disconnect() # CHIUDE TUTTE LE CONNESSIONI APERTE NEL CONNECTION POOL
             self._pool = None
 
+    # CREO UN CLIENT REDIS STANDALONE, NON RIUSA IL POOL PER EVITARE CONFLITTI DI ENCODING
+    # LO CHIUDE IL CHIAMANTEE CON await client.aclose()
     def get_client(self) -> Redis:
         if self._pool is None:
             raise RuntimeError("Call .init() before using Redis!")
-        return Redis(connection_pool=self._pool, decode_responses=True) # OGNI CHIAMATA CREA UN CLIENT CHE CONDIVIDE IL POOL
+        settings = get_settings()
+        return Redis.from_url(settings.redis_url, decode_responses=True)
 
     # NON USA IL POOL CONDIVISO PERCHE IL PUB/SUB BLOCCA
     def create_pubsub_client(self) -> Redis:

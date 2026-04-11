@@ -72,7 +72,7 @@ async def run_recovery(utility_node_url: str) -> None:
         else:
             logger.debug("[RECOVERY] job completed: %d transaction recovered!", recovered)
     except Exception as exc:
-        logger.error("[RECOVERY] errore while Redis scanning: %s", exc)
+        logger.error("[RECOVERY] error while Redis scanning: %s", exc)
 
 async def recovery_loop(utility_node_url: str):
     # LOOP INFINITO CHE CHIAMA RUN_RECOVRY OGNI 60 SECONDI, AVVIATO COME ASYNCIO.CREATE_TASK

@@ -4,17 +4,16 @@ import logging
 import httpx
 
 from redis.asyncio import Redis
-from db import db_manager
-from redis_client import redis_manager
-from repositories import field_booking_repository
-from schemas import BookingStatus, TwoPCTransactionState
-from two_pc_coordinator import commit_all, rollback_all
+from shared.db import db_manager
+from shared.redis_client import redis_manager
+from app.repositories import field_booking_repository
+from shared.schemas import BookingStatus, TwoPCTransactionState
+from app.two_pc_coordinator import commit_all, rollback_all
 
 logger = logging.getLogger(__name__)
 
 _RECOVERY_INTERVAL_S = 60  # OGNI QUANTI SECONDI GIRA IL JOB
 _TXN_KEY_PREFIX = "2pc:txn:"
-_HTTP_TIMEOUT = 5.0
 
 async def _recover_one(
         redis: Redis,
@@ -37,10 +36,12 @@ async def _recover_one(
                 await field_booking_repository.update_status(db, field_booking_id, BookingStatus.FAILED)
     except Exception as exc:
         logger.error("[RECOVERY] txn=%d unexpected error: %s", field_booking_id, exc)
+    finally:
+        await redis.aclose()
 
 async def run_recovery(utility_node_url: str) -> None:
     # SCANSIONO REDIS CERCANDO LE TRANSAZIONI IN STATO PREPARED PER RECUPERARLE
-    redis = redis_manager.get_redis()
+    redis = redis_manager.get_client()
     cursor = 0
     recovered = 0
 
@@ -63,13 +64,13 @@ async def run_recovery(utility_node_url: str) -> None:
                 await _recover_one(redis, field_booking_id, utility_booking_ids, utility_node_url)
                 recovered += 1
 
-                if cursor == 0:
-                    break
+            if cursor == 0:
+                break
 
-            if recovered == 0:
-                logger.debug("[RECOVERY] no PREPARED transaction found!")
-            else:
-                logger.debug("[RECOVERY] job completed: %d transaction recovered!", recovered)
+        if recovered == 0:
+            logger.debug("[RECOVERY] no PREPARED transaction found!")
+        else:
+            logger.debug("[RECOVERY] job completed: %d transaction recovered!", recovered)
     except Exception as exc:
         logger.error("[RECOVERY] errore while Redis scanning: %s", exc)
 

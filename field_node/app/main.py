@@ -4,6 +4,7 @@ from typing import Optional
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends, HTTPException, WebSocket, WebSocketDisconnect
+from pygments.lexers import stata
 from redis.asyncio import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.staticfiles import StaticFiles
@@ -17,6 +18,7 @@ from shared.locks import DistributedLock
 from shared.logging_config import setup_logging
 from app.two_pc_coordinator import prepare_all, rollback_all, commit_all
 from app.repositories import field_repository, field_booking_repository
+from app.recovery import recovery_loop, run_recovery
 
 setup_logging()
 logger = logging.getLogger(__name__)
@@ -27,7 +29,16 @@ _2PC_LOCK_TTL_MS = 30_000
 async def lifespan(app: FastAPI):
     db_manager.init()
     redis_manager.init()
+    # AVVIO IL RECOVERY LOOP COME TASK ASYNCIO IN BACKGROUND
+    _recovery_task = asyncio.create_task(recovery_loop(settings.utility_node_url))
+    logger.info("[RECOVERY] background task started!")
     yield
+    # CANCELLATO AUTOMATICAMENTE ALLO SHUTDOWN DEL NODO
+    _recovery_task.cancel()
+    try:
+        await _recovery_task
+    except asyncio.CancelledError:
+        pass
     await db_manager.close()
     await redis_manager.close()
 
@@ -190,7 +201,7 @@ async def create_booking_2pc(data: FieldBookingRequest, db: AsyncSession = Depen
 @app.websocket("/ws/availability")
 async def ws_availability(websocket: WebSocket):
     await websocket.accept()
-    logger.info("[WS] client connected")
+    logger.info("[WS] client connected!")
 
     pubsub_client = redis_manager.create_pubsub_client()
     pubsub = pubsub_client.pubsub()
@@ -209,9 +220,15 @@ async def ws_availability(websocket: WebSocket):
         while True:
             await websocket.receive_text()
     except WebSocketDisconnect:
-        logger.info("[WS] client disconnected")
+        logger.info("[WS] client disconnected!")
     finally:
         task.cancel()
         await pubsub.unsubscribe(AVAILABILITY_CHANNEL)
         await pubsub_client.aclose()
-        logger.info("[WS] pubsub client closed")
+        logger.info("[WS] pubsub client closed!")
+
+# ENDPOINT PER TRIGGERARE IL RECOVERY MANUALMENTE - UTILE PER DEMO E TEST
+@app.post("/admin/recovery", status_code=200)
+async def trigger_recovery():
+    await run_recovery(settings.utility_node_url)
+    return {"ok": True, "message": "Recovery job executed!"}

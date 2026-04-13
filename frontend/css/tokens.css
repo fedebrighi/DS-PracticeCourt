@@ -2,7 +2,7 @@
     /* SUPERFICIE */
     --bg: #F7F6F2;
     --surface: #FFFFFF;
-    --dark: #0C1A12;
+    --dark: linear-gradient(135deg, #0C1A12 0%, #1a2e1f 100%);
 
     /* ACCENTO */
     --accent: #1D9E75;

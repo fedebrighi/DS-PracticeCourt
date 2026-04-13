@@ -9,7 +9,7 @@ USE practicecourt;
 CREATE TABLE IF NOT EXISTS fields (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
-    sport_type ENUM('football', 'padel', 'basketball') NOT NULL,
+    sport_type ENUM('football', 'tennis', 'basketball') NOT NULL,
     location VARCHAR(200) NOT NULL,
     price_per_hour DECIMAL(6,2) NOT NULL DEFAULT 0.00,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,

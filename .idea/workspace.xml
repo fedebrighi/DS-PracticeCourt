@@ -4,12 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Modified the background of the navbar with a linear gradient">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/imgs/logo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/frontend/index.html" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/init.sql" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/init.sql" afterDir="false" />
-    </list>
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added some images and changed &quot;padel&quot; with &quot;tennis&quot; in database" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -133,7 +128,7 @@
       <workItem from="1775839309089" duration="5504000" />
       <workItem from="1775898376837" duration="9832000" />
       <workItem from="1776064351137" duration="150000" />
-      <workItem from="1776082893811" duration="5593000" />
+      <workItem from="1776082893811" duration="6323000" />
     </task>
     <task id="LOCAL-00001" summary="Added SQLAlchemy ORM models for all 4 tables">
       <option name="closed" value="true" />
@@ -511,15 +506,29 @@
       <option name="project" value="LOCAL" />
       <updated>1776095175789</updated>
     </task>
-    <option name="localTasksCounter" value="48" />
+    <task id="LOCAL-00048" summary="Minor fixes on the html page">
+      <option name="closed" value="true" />
+      <created>1776097111827</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1776097111827</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Added some images and changed &quot;padel&quot; with &quot;tennis&quot; in database">
+      <option name="closed" value="true" />
+      <created>1776097203483</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1776097203483</updated>
+    </task>
+    <option name="localTasksCounter" value="50" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed errors on IDE settings" />
-    <MESSAGE value="Added Test 2pc end-to-end Test + some missing files from the last commit" />
     <MESSAGE value="Fixed minor errors on test" />
     <MESSAGE value="Added a new file with a function to publish the events about bookings" />
     <MESSAGE value="Added a new function that doesn't use the shared pool, because uses the pubsub logic" />
@@ -543,7 +552,9 @@
     <MESSAGE value="Added tokens.css to define the generical specifics of the style of the webpage" />
     <MESSAGE value="Added navbar.css to add css style to the navbar in the frontend page" />
     <MESSAGE value="Modified the background of the navbar with a linear gradient" />
-    <option name="LAST_COMMIT_MESSAGE" value="Modified the background of the navbar with a linear gradient" />
+    <MESSAGE value="Minor fixes on the html page" />
+    <MESSAGE value="Added some images and changed &quot;padel&quot; with &quot;tennis&quot; in database" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added some images and changed &quot;padel&quot; with &quot;tennis&quot; in database" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

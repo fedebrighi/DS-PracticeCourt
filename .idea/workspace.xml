@@ -4,19 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added some images and changed &quot;padel&quot; with &quot;tennis&quot; in database" />
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added hero to the frontend page">
+      <change afterPath="$PROJECT_DIR$/field_node/static/frontend/css/hero.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/css/navbar.css" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/css/navbar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/css/style.css" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/css/style.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/css/tokens.css" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/css/tokens.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/frontend/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="52" />
+    <option name="cachedIndexableFilesCount" value="63" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Python Script" />
+        <option value="CSS File" />
       </list>
     </option>
   </component>
@@ -71,6 +80,7 @@
     "git-widget-placeholder": "main",
     "kotlin-language-version-configured": "true",
     "last_opened_file_path": "/home/federico/Scrivania/DS-PracticeCourt/pyproject.toml",
+    "list.type.of.created.stylesheet": "CSS",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -128,31 +138,8 @@
       <workItem from="1775839309089" duration="5504000" />
       <workItem from="1775898376837" duration="9832000" />
       <workItem from="1776064351137" duration="150000" />
-      <workItem from="1776082893811" duration="6323000" />
-    </task>
-    <task id="LOCAL-00001" summary="Added SQLAlchemy ORM models for all 4 tables">
-      <option name="closed" value="true" />
-      <created>1774545409419</created>
-      <option name="number" value="00001" />
-      <option name="presentableId" value="LOCAL-00001" />
-      <option name="project" value="LOCAL" />
-      <updated>1774545409419</updated>
-    </task>
-    <task id="LOCAL-00002" summary="Updated schemas.py so Pydantic can read ORM obj's attributes correctly">
-      <option name="closed" value="true" />
-      <created>1774545900947</created>
-      <option name="number" value="00002" />
-      <option name="presentableId" value="LOCAL-00002" />
-      <option name="project" value="LOCAL" />
-      <updated>1774545900947</updated>
-    </task>
-    <task id="LOCAL-00003" summary="Added repositories for Fields, updated main.py to use them. Fixed other files to correct errors coming by command line tests">
-      <option name="closed" value="true" />
-      <created>1774552967855</created>
-      <option name="number" value="00003" />
-      <option name="presentableId" value="LOCAL-00003" />
-      <option name="project" value="LOCAL" />
-      <updated>1774552967855</updated>
+      <workItem from="1776082893811" duration="6576000" />
+      <workItem from="1776181343104" duration="2570000" />
     </task>
     <task id="LOCAL-00004" summary="Added repositories for Utilities (Utility + Utility Booking) and renamed booking_repository">
       <option name="closed" value="true" />
@@ -522,16 +509,37 @@
       <option name="project" value="LOCAL" />
       <updated>1776097203483</updated>
     </task>
-    <option name="localTasksCounter" value="50" />
+    <task id="LOCAL-00050" summary="Added mini images to use then as icons">
+      <option name="closed" value="true" />
+      <created>1776097983978</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1776097983989</updated>
+    </task>
+    <task id="LOCAL-00051" summary="Moved &quot;imgs&quot; folder into &quot;static&quot; package">
+      <option name="closed" value="true" />
+      <created>1776098118203</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1776098118203</updated>
+    </task>
+    <task id="LOCAL-00052" summary="Added hero to the frontend page">
+      <option name="closed" value="true" />
+      <created>1776182708253</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1776182708255</updated>
+    </task>
+    <option name="localTasksCounter" value="53" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed minor errors on test" />
-    <MESSAGE value="Added a new file with a function to publish the events about bookings" />
-    <MESSAGE value="Added a new function that doesn't use the shared pool, because uses the pubsub logic" />
     <MESSAGE value="Updated the main files with the new pubsub logic" />
     <MESSAGE value="Fixed errors" />
     <MESSAGE value="Added a live events frontend page to check the correctness of what i implemented yesterday" />
@@ -554,7 +562,10 @@
     <MESSAGE value="Modified the background of the navbar with a linear gradient" />
     <MESSAGE value="Minor fixes on the html page" />
     <MESSAGE value="Added some images and changed &quot;padel&quot; with &quot;tennis&quot; in database" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added some images and changed &quot;padel&quot; with &quot;tennis&quot; in database" />
+    <MESSAGE value="Added mini images to use then as icons" />
+    <MESSAGE value="Moved &quot;imgs&quot; folder into &quot;static&quot; package" />
+    <MESSAGE value="Added hero to the frontend page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added hero to the frontend page" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

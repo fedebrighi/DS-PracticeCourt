@@ -4,9 +4,10 @@
     <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>DS-PracticeCourt</title>
     <link rel="stylesheet" href="css/tokens.css">
     <link rel="stylesheet" href="css/navbar.css">
-    <title>DS-PracticeCourt</title>
+    <link rel="stylesheet" href="css/hero.css">
 </head>
 <body>
     <header class="navbar">
@@ -26,33 +27,33 @@
                 <a href="#feed" class="nav-link">Live Feed</a>
                 <a href="http://localhost:8001/docs" target="_blank" rel="noopener noreferrer" class="nav-link external">API Docs ↗</a>
             </nav>
-            <main>
-                <section id="booking">
-                    <!-- form prenotazione -->
-                </section>
-
-                <section id="feed">
-                    <!-- live feed -->
-                </section>
-            </main>
         </div>
     </header>
-    <section class="hero" aria-label="hero-heading">
+    <section class="hero" aria-labelledby="hero-heading">
         <div class="hero-inner">
             <div class="hero-badge">
                 <span class="pulse-dot" aria-hidden="true"></span>
                 Real-Time Field's Availabilities
             </div>
             <h1 class="hero-title" id="hero-heading">
-                Book your Field, <br>
+                Book your Field <br>
                 <span class="hero-accent">Play Today</span>
             </h1>
             <p class="hero-subtitle">
                 Find and reserve sports fields in real time to play with your friends!
-                Chack availability and confirm in seconds.
+                Check availability and confirm in seconds.
             </p>
         </div>
     </section>
+    <main>
+        <section id="booking">
+            <!-- form prenotazione -->
+        </section>
+
+        <section id="feed">
+            <!-- live feed -->
+        </section>
+    </main>
     <script src="js/app.js" defer></script>
 </body>
 </html>

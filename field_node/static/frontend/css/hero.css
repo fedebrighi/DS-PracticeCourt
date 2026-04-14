@@ -1,0 +1,75 @@
+.hero{
+    position: relative;
+    overflow: hidden;
+    padding: 4rem 2rem;
+
+    background-image: url('../../imgs/hero.png');
+    background-size: cover;
+    background-position: center;
+
+    isolation: isolate;
+}
+
+.hero::before{
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(12, 26, 18, 0.8);
+    z-index: -1;
+}
+
+.hero-inner{
+    position: relative;
+    max-width: 960px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: 1rem;
+}
+
+.hero-badge{
+    display: inline-flex;
+    align-items: center;
+    gap: 1rem;
+    background: rgba(29, 158, 117, 0.2);
+    border: 1px solid var(--accent);
+    border-radius: 999px;
+    padding: 0.3rem 0.8rem;
+    font-size: 12px;
+    color: var(--accent-fill);
+}
+
+@keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.5; transform: scale(0.85); }
+}
+
+.pulse-dot{
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.hero-title{
+    font-size: 2rem;
+    font-weight: 500;
+    color: var(--text-inverse);
+    line-height: 1.2;
+}
+
+.hero-accent{
+    color: var(--accent);
+}
+
+.hero-subtitle{
+    font-size: 14px;
+    color: rgba(255, 255, 255, 0.5);
+    max-width: 40ch;
+    line-height: 1.6;
+}

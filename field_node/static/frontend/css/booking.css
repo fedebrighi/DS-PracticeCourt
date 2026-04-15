@@ -1,0 +1,228 @@
+.main-layout {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    display: grid;
+    grid-template-columns: 1fr 300px;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+@media (max-width: 720px) {
+    .main-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.booking-card{
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.card-title{
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text-primary);
+}
+
+.form-row{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-row--inline{
+    flex-direction: row;
+    gap: 1rem;
+}
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    flex: 1;
+}
+
+.form-label{
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.05rem;
+}
+
+.form-hint{
+    font-size: 11px;
+    font-weight: 400;
+    color: var(--text-tertiary);
+    text-transform: none;
+    letter-spacing: 0;
+}
+
+.form-input, .form-select {
+    height: 36px;
+    padding: 0 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    font-size: 14px;
+    color: var(--text-primary);
+    transition: border-color var(--t);
+    width: 100%;
+}
+
+.form-select {
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg width='10' height='6' viewBox='0 0 10 6' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.5' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 0.75rem center;
+    padding-right: 2rem;
+    cursor: pointer;
+}
+
+.form-input:focus, .form-select:focus {
+    outline: none;
+    border-color: var(--accent);
+}
+
+.form-error{
+    font-size: 11px;
+    color: var(--error-text);
+    min-height: 1em;
+}
+
+.slot-grid{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.slot-pill{
+    height: 32px;
+    padding: 0 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    font-size: 14px;
+    color: var(--text-primary);
+    font-family: var(--font-mono), serif;
+    cursor: pointer;
+    transition: background var(--t), border-color var(--t), color var(--t);
+}
+
+.slot-pill:hover:not(:disabled) {
+    background-color: var(--accent-border);
+    background: var(--accent-light);
+}
+
+.slot-pill--selected {
+    background: var(--accent-light);
+    border-color: var(--accent);
+    color: var(--accent-hover);
+    font-weight: 500;
+}
+
+.slot-pill--taken {
+    color: var(--text-tertiary);
+    text-decoration: line-through;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.utility-grid{
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.utility-card {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    height: 32px;
+    padding: 0 0.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    background: var(--bg);
+    font-size: 14px;
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: background var(--t), border-color var(--t);
+    user-select: none;
+}
+
+.utility-card:hover {
+    background: var(--accent-light);
+    border-color: var(--accent);
+    color: var(--accent-hover);
+}
+
+.utility-card input[type="checkbox"]{
+    display: none;
+}
+
+.utility-icon{
+    width: 14px;
+    height: 14px;
+    object-fit: contain;
+}
+
+.utility-price {
+    font-size: 11px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono), serif;
+}
+
+/* SETTAGGIO SKELETON, POI LE IMMAGINI LE AGGIUNGERA' IL JS INTANTO SETTO PROPRIETA' BASE */
+
+@keyframes shimmer {
+    0%, 100% {opacity: 0.5;}
+    50% {opacity: 1;}
+}
+
+.skeleton{
+    background: var(--border);
+    border-radius: var(--radius-md);
+    animation: shimmer 1.2s ease-in-out infinite;
+}
+
+.slot-skeleton, .utility-skeleton {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.slot-skeleton .skeleton {
+    width: 64px;
+    height: 32px;
+}
+
+.utility-skeleton .skeleton {
+    width: 100px;
+    height: 32px;
+}
+
+.alert {
+    font-size: 12px;
+    padding: 0.6rem 0.75rem;
+    border-radius: var(--radius-md);
+    border: 1px solid;
+}
+
+.alert--warning{
+    background: var(--warning-bg);
+    color: var(--warning-text);
+    border-color: var(--warning-text);
+}
+
+.alert--error{
+    background: var(--error-bg);
+    color: var(--error-text);
+    border-color: var(--error-border);
+}

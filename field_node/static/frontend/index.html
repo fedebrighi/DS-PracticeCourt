@@ -46,10 +46,68 @@
         </div>
     </section>
     <main>
-        <section id="booking">
-            <!-- form prenotazione -->
-        </section>
+        <section class="booking-card" id="booking">
+            <h2 class="card-title">Book a Field</h2>
 
+            <!-- SEZIONE DI INSERIMENTO USER ID -->
+            <div class="form-row">
+                <label class="form-label" for="user-id">Who are you?</label>
+                <input class="form-input" type="text" id="user-id" placeholder="e.g. mario_rossi" autocomplete="username" required />
+                <span class="form-error" id="user-id-error" aria-live="polite"></span>
+            </div>
+
+            <!-- SEZIONE DI SCELTA DELLO SPORT E DELLA DATA -->
+            <div class="form-row form-row--inline">
+                <div class="form-group">
+                    <label class="form-label" for="sport-select">Sport</label>
+                    <select class="form-select" id="sport-select" disabled>
+                        <option value="">Loading...</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="date-input">Date</label>
+                    <input class="form-input" type="date" id="date-input"/>
+                </div>
+            </div>
+
+            <!-- SLOTS -->
+            <div class="form-row">
+                <span class="form-label">
+                    Available Slots
+                    <span class="form-hint">(Click first and last to select a range of hours)</span>
+                </span>
+
+                <div class="slot-skeleton" id="slot-skeleton" aria-hidden="true">
+                    <div class="skeleton"></div><div class="skeleton"></div>
+                    <div class="skeleton"></div><div class="skeleton"></div>
+                    <div class="skeleton"></div><div class="skeleton"></div>
+                </div>
+
+                <div class="slot-grid" id="slot-grid" role="group" aria-label="Available Time Slots" hidden></div>
+
+                <div class="alert alert--warning" id="alert-slot-taken" role="alert" hidden>
+                    A slot was just booked by another user -- Availability Updated!
+                </div>
+            </div>
+
+            <!-- UTILITIES -->
+            <div class="form-row">
+                <span class="form-label">
+                    Utilities
+                    <span class="form-hint">(Optional)</span>
+                </span>
+
+                <div class="utility-skeleton" id="utility-skeleton" aria-hidden="true">
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                    <div class="skeleton"></div>
+                </div>
+
+                <div class="utility-grid" id="utility-grid" role="group" aria-label="Optional utilities" hidden></div>
+            </div>
+            <!-- qua dovrò aggiungere anche il totale + conferma -->
+        </section>
         <section id="feed">
             <!-- live feed -->
         </section>

@@ -226,3 +226,118 @@
     color: var(--error-text);
     border-color: var(--error-border);
 }
+
+.booking-footer{
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--border);
+}
+
+.booking-total{
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-family: var(--font-mono), serif;
+    min-height: 1.4em;
+}
+
+.booking-total strong{
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.btn-confirm{
+    height: 40px;
+    padding: 0 1.25rem;
+    border-radius: var(--radius-md);
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: 1px solid transparent;
+    transition: background var(--t), border-color var(--t), color var(--t);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    align-self: flex-end;
+    min-width: 180px;
+}
+
+.btn-confirm[data-state="idle"]{
+    background: var(--accent);
+    color: white;
+}
+
+.btn-confirm[data-state="idle"]:hover{
+    background: var(--accent-hover);
+}
+
+.btn-confirm[data-state="loading"]{
+    background: var(--accent-fill);
+    color: var(--accent-hover);
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+.btn-confirm[data-state="success"]{
+    background: var(--accent-light);
+    border-color: var(--accent-border);
+    color: var(--accent-hover);
+    cursor: default;
+}
+
+.btn-confirm[data-state="error"]{
+    background: var(--error-bg);
+    border-color: var(--error-border);
+    color: var(--error-text);
+}
+
+.btn-confirm [data-show]{
+    display: none;
+}
+
+.btn-confirm[data-state="idle"] [data-show="idle"] {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-confirm[data-state="loading"] [data-show="loading"] {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-confirm[data-state="success"] [data-show="success"] {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.btn-confirm[data-state="error"] [data-show="error"] {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+.spinner{
+    animation: spin 0.8s linear infinite;
+    flex-shrink: 0;
+}
+
+.api-hint{
+    font-size: 11px;
+    color: var(--text-tertiary);
+    display: flex;
+    gap: 0.4rem;
+    align-self: flex-end;
+}
+
+.mono{
+    font-family: var(--font-mono), monospace;
+}

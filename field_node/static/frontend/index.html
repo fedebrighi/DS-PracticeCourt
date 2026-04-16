@@ -107,7 +107,38 @@
 
                 <div class="utility-grid" id="utility-grid" role="group" aria-label="Optional utilities" hidden></div>
             </div>
-            <!-- qua dovrò aggiungere anche il totale + conferma -->
+            <div class="booking-footer">
+                <div class="booking-total" id="booking-total" aria-live="polite">
+                    <!-- verrà popolato dal js con il calcolo del prezzo totale -->
+                </div>
+
+                <div class="alert alert--error" id="alert-conflict" role="alert" hidden>
+                    <strong>CONFLICT:</strong> slot already taken. Please select another time.
+                </div>
+                <div class="alert alert--error" id="alert-2pc" role="alert" hidden>
+                    <strong>TRANSACTION FAILED (2PC):</strong> not all participants voted YES. Try again.
+                </div>
+                <div class="alert alert--warning" id="alert-network" role="alert" hidden>
+                    <strong>NETWORK ERROR:</strong> cannot reach the server. Are Docker Containers running?
+                </div>
+
+                <button class="button-confirm" id="confirm-btn" type="button" data-state="idle">
+                    <span data-show="idle">Confirm Booking</span>
+                    <span data-show="loading" aria-hidden="true">
+                        <svg class="spinner" viewBox="0 0 14 13" width="14" height="14">
+                            <circle cx="7" cy="7" r="5" stroke="currentColor" stroke-width="1.5" fill="none" stroke-dasharray="22" stroke-dashoffset="8"></circle>
+                        </svg>
+                        Sending...
+                    </span>
+                    <span data-show="success" aria-hidden="true"> Booking Confirmed!</span>
+                    <span data-show="error" aria-hidden="true"> Booking Failed! Try again...</span>
+                </button>
+
+                <p class="api-hint">
+                    <span class="mono">POST /bookings/2pc</span>
+                    <span class="mono">prepare -> commit</span>
+                </p>
+            </div>
         </section>
         <aside class="sidebar" id="feed" aria-label="Live Booking Feed">
             <!-- live feed -->

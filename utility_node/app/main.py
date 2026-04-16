@@ -8,6 +8,7 @@ from shared.schemas import HealthResponse, UtilityResponse, UtilityBookingRespon
     TwoPCVote, PrepareRequest, CommitRollbackResponse, CommitRollbackRequest, BookingStatus
 from app.repositories import utility_repository, utility_booking_repository
 from shared.logging_config import setup_logging
+from fastapi.middleware.cors import CORSMiddlewareg
 
 # STESSE COSE CHE HO FATTO IN MAIN.PY DI FIELDNODE, QUESTO È RELATIVO ALLE PRENOTAZIONI
 
@@ -24,6 +25,13 @@ async def lifespan(app: FastAPI):
     await redis_manager.close()
 
 app = FastAPI(title="Utility Node", version="0.1.0", lifespan=lifespan)
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:8001"],
+    allow_methods=["GET", "POST"],
+    allow_headers=["*"],
+)
 
 @app.get("/health", response_model=HealthResponse)
 async def health():

@@ -185,5 +185,121 @@ async function loadUtilities(){
     }
 }
 
+/* RITORNA TRUE SE LO SLOT CHE INIZIA A SLOTTIME SI SOVRAPPONE A UN ALTRA BOOKING*/
+function isSlotTaken(slotTime, bookings){
+    const slotStart = slotToMinutes(slotTime);
+    const slotEnd = slotStart + SLOT_DURATION;
+    return bookings.some(b => {
+        if (b.status === 'cancelled' || b.status === 'aborted') return false;
+        const bStart = slotToMinutes(b.start_time.substring(11, 16));
+        const bEnd = slotToMinutes(b.end_time.substring(11, 16));
+        return slotStart < bEnd && slotEnd > bStart;
+    })
+}
 
+/* CONTROLLO POSSIBILI CONFLITTI NEGLI SLOT*/
+function checkRangeConflict(startTime, endTime){
+    const startMin = slotToMinutes(startTime);
+    const endMin = slotToMinutes(endTime);
+    const conflict = generateTimeSlots().filter(s => slotToMinutes(s) >= startMin && slotToMinutes(s) <= endMin).some(s => isSlotTaken(s, state.bookings));
+    if(conflict){
+        show(dom.alertSlotTaken);
+    }
+    return conflict;
+}
+
+/* AGGIORNAMENTO VISIVO DEGLI SLOT */
+function updateSlotHiglights(){
+    const [startTime, endTime] = state.selectedSlots;
+    const startMin = startTime ? slotToMinutes(startTime) : null;
+    const endMin = endTime ? slotToMinutes(endTime) : null;
+
+    dom.slotGrid.querySelectorAll('.slot-pill:not(.slot-pill--taken)').forEach( pill =>{
+        const m = slotToMinutes(pill.dataset.time);
+        let selected = false;
+        if (state.selectedSlots.length === 1){
+            selected = m === startMin;
+        } else if (state.selectedSlots.length === 2){
+            selected = m >= startMin && m <= endMin;
+        }
+        pill.classList.toggle('slot-pill--selected', selected);
+        pill.setAttribute('aria-pressed', selected ? 'true' : 'false');
+    });
+}
+
+/* SELEZIONE DELLO SLOT */
+function handleSlotClick(slotTime){
+    if(state.selectedSlots.length === 0 || state.selectedSlots.length === 2){
+        state.selectedSlots = [slotTime];
+    } else {
+        const first = state.selectedSlots[0];
+
+        if(slotTime === first){
+            state.selectedSlots = [];
+        } else {
+            const [a, b] = slotToMinutes(first) <= slotToMinutes(slotTime) ? [first, slotTime] : [slotTime, first];
+
+            if(checkRangeConflict(a, b)){
+                state.selectedSlots = [];
+            } else {
+                hide(dom.alertSlotTaken);
+                state.selectedSlots = [a,b];
+            }
+        }
+    }
+    updateSlotHiglights();
+    calculateTotal();
+}
+
+/* RENDERING DEGLI SLOTS NELLA PAGINA*/
+async function renderSlots(){
+    show(dom.slotSkeleton);
+    hide(dom.slotGrid);
+    hide(dom.alertSlotTaken);
+    state.selectedSlots = [];
+    calculateTotal()
+
+    try{
+        const res = await fetch(`${API_BASE}/bookings?field_id=${state.selectedFieldId}&date=${state.selectedDate}`);
+        if(!res.ok){
+            throw new Error(`HTTP ${res.status}`);
+        }
+        state.bookings = await res.json();
+    }catch (error){
+        console.error('[BOOKINGS] Fetch Failed:', error);
+        state.bookings = []
+    }
+
+    dom.slotGrid.innerHTML = '';
+    generateTimeSlots().forEach(slotTime => {
+        const taken = isSlotTaken(slotTime, state.bookings);
+        const pill = document.createElement('button');
+        pill.type = 'button';
+        pill.className = taken ? 'slot-pill slot-pill--taken' : 'slot-pill';
+        pill.textContent = slotTime;
+        pill.dataset.time = slotTime;
+        pill.disabled = taken;
+        pill.setAttribute('aria-label', `Slot ${slotTime}${taken ? ' \u2014 occupato' : ''}`);
+        if(!taken){
+            pill.addEventListener('click', () => handleSlotClick(slotTime));
+        }
+        dom.slotGrid.appendChild(pill);
+    });
+    hide(dom.utilitySkeleton);
+    show(dom.slotGrid);
+}
+
+dom.sportSelect.addEventListener('change', () =>{
+    state.selectedFieldId = dom.sportSelect.value ? parseInt(dom.sportSelect.value) : null;
+    state.selectedSlots = [];
+    calculateTotal();
+    if(state.selectedFieldId && state.selectedDate) renderSlots();
+});
+
+dom.dateInput.addEventListener('change', () =>{
+    state.selectedDate = dom.dateInput.value || null;
+    state.selectedSlots = [];
+    calculateTotal();
+    if(state.selectedFieldId && state.selectedDate) renderSlots();
+});
 

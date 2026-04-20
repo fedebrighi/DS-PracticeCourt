@@ -8,7 +8,7 @@ from shared.schemas import HealthResponse, UtilityResponse, UtilityBookingRespon
     TwoPCVote, PrepareRequest, CommitRollbackResponse, CommitRollbackRequest, BookingStatus
 from app.repositories import utility_repository, utility_booking_repository
 from shared.logging_config import setup_logging
-from fastapi.middleware.cors import CORSMiddlewareg
+from fastapi.middleware.cors import CORSMiddleware
 
 # STESSE COSE CHE HO FATTO IN MAIN.PY DI FIELDNODE, QUESTO È RELATIVO ALLE PRENOTAZIONI
 

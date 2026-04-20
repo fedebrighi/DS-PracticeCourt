@@ -73,8 +73,8 @@ async def create_field(data: FieldBase, db: AsyncSession = Depends(get_db)):
     )
 
 @app.get("/bookings", response_model= list[FieldBookingResponse]) # RESTITUISCE TUTTE LE PRENOTAZIONI
-async def list_bookings(db: AsyncSession = Depends(get_db)):
-    return await field_booking_repository.get_all(db)
+async def list_bookings(field_id: Optional[int] = None, date: Optional[str] = None, db: AsyncSession = Depends(get_db)):
+    return await field_booking_repository.get_all(db, field_id=field_id, date=date)
 
 @app.get("/bookings/{booking_id}",response_model= FieldBookingResponse) # RESTITUISCE UNA PRENOTAZIONE PER ID
 async def get_booking(booking_id: int, db: AsyncSession = Depends(get_db)):

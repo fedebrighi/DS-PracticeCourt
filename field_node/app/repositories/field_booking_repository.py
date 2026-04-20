@@ -1,5 +1,7 @@
 from datetime import datetime
-from sqlalchemy import select
+from typing import Optional
+
+from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.sql.elements import and_
 from shared.locks import DistributedLock
@@ -11,8 +13,13 @@ _LOCK_TTL_MS = 5_000  # 5 SECONDI PER LA SEZIONE CRITICA
 
 # REPOSITORY PER LE OPERAZIONI CRUD SULLA TABELLA FIELDS BOOKING (COME FIELD_REPOSITORY)
 
-async def get_all(db: AsyncSession) -> list[FieldBooking]: # RESTITUISCE TUTTI I CAMPI PRESENTI NEL DB
-    result = await db.execute(select(FieldBooking))
+async def get_all(db: AsyncSession, field_id: Optional[int] = None, date: Optional[str] = None) -> list[FieldBooking]:
+    query = select(FieldBooking)
+    if field_id is not None:
+        query = query.where(FieldBooking.field_id == field_id)
+    if date is not None:
+        query = query.where(func.date(FieldBooking.start_time) == date)
+    result = await db.execute(query)
     return list(result.scalars().all())
 
 async def get_by_id(db: AsyncSession, booking_id: int) -> FieldBooking | None: # RESITUISCE UN CAMPO PER ID

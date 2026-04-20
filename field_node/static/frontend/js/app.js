@@ -193,8 +193,13 @@ async function loadUtilities(){
 function isSlotTaken(slotTime, bookings){
     const slotStart = slotToMinutes(slotTime);
     const slotEnd = slotStart + SLOT_DURATION;
+
     return bookings.some(b => {
         if (!b.start_time || !b.end_time ||  b.status === 'cancelled' || b.status === 'aborted') return false;
+
+        const bookingDate = b.start_time.substring(0, 10);
+        if(bookingDate !== state.selectedDate) return false;
+
         const bStart = slotToMinutes(b.start_time.substring(11, 16));
         const bEnd = slotToMinutes(b.end_time.substring(11, 16));
         return slotStart < bEnd && slotEnd > bStart;

@@ -1,3 +1,7 @@
+/**
+ * @typedef {{id: number, name: string, sport_type: string, price_per_hour: number, is_active: boolean}} Field
+ */
+
 const API_BASE = 'http://localhost:8001';
 const UTILITY_BASE = 'http://localhost:8002';
 const WS_URL = 'ws://localhost:8001/ws/availability';
@@ -44,7 +48,7 @@ const dom = {
 }
 
 const show = el => el.removeAttribute('hidden');
-const hide = el => el.setAttribute('hidden');
+const hide = el => el.setAttribute('hidden', '');
 
 /* MINUTI TOTALI */
 function slotToMinutes(timeStr) {
@@ -87,7 +91,7 @@ async function loadFields(){
         const res = await fetch(`${API_BASE}/fields`);
         const data = await res.json();
 
-        state.fields = data.filter(f => f.isActive());
+        state.fields = data.filter(f => f.is_active);
 
         const sportTypes = [...new Set(state.fields.map(f => f.sport_type))].filter(s => s != null && s !== '');
 
@@ -124,7 +128,7 @@ function calculateTotal() {
     if (!field) { dom.bookingTotal.textContent = '\u2014'; return;}
 
     const[startTime, endTime] = state.selectedSlots;
-    const hours = (slotToMinutes(endTime)) + SLOT_DURATION - slotToMinutes(startTime) / 60;
+    const hours = (slotToMinutes(endTime) + SLOT_DURATION - slotToMinutes(startTime)) / 60;
     const fieldCost = field.price_per_hour * hours;
     const utilityCost = state.utilities
         .filter(u => state.selectedUtilityIds.includes(u.id))
@@ -149,9 +153,9 @@ async function renderUtilities(){
         card.className = 'utility-card';
         card.dataset.utilityId = u.id;
         card.innerHTML = `
-        <input type="checkbox" class="utility-checkbox value="${u.id} />
+        <input type="checkbox" class="utility-checkbox" value="${u.id}" />
         <span class="utility-name">${u.name}</span>
-        <span class="utility-price">${u.price_per_hour}</span>
+        <span class="utility-price">\u20ac${u.price_per_hour}</span>
         `
 
         card.addEventListener('change', () => {
@@ -173,10 +177,10 @@ async function renderUtilities(){
 /* LOADING DELLE UTIITIES */
 async function loadUtilities(){
     try{
-        const res = await fetch(`${API_BASE}/utilities`);
+        const res = await fetch(`${UTILITY_BASE}/utilities`);
         const data = await res.json();
-        state.utilities = data.filter(u => u.isActive());
-        renderUtilities();
+        state.utilities = data.filter(u => u.is_active);
+        await renderUtilities();
     } catch (error) {
         console.error('[UTILITIES] Fetch failed:', error);
         hide(dom.utilitySkeleton);
@@ -285,7 +289,7 @@ async function renderSlots(){
         }
         dom.slotGrid.appendChild(pill);
     });
-    hide(dom.utilitySkeleton);
+    hide(dom.slotSkeleton);
     show(dom.slotGrid);
 }
 
@@ -331,7 +335,7 @@ function addFeedEvent(event){
         li.style.transform = 'translateX(0)';
     });
 
-    while(dom.feedList.childNodes.length > FEED_MAX){
+    while(dom.feedList.children.length > FEED_MAX){
         dom.feedList.removeChild(dom.feedList.lastChild);
     }
 
@@ -383,8 +387,7 @@ function connectWebSocket(){
         dom.wsStatus.textContent = 'OFFLINE';
         scheduleWsReconnect();
     });
-    ws.addEventListener('error', e=>{
-    })
+    ws.addEventListener('error', () =>{})
 }
 
 const USER_ID_RE = /^[a-zA-Z0-9_]{3,32}$/;
@@ -399,7 +402,7 @@ function validateUserId(){
     }
 
     if (!USER_ID_RE.test(val)){
-        dom.userIdError.textContent = 'User 3\u201332 alphanumeric characters or underscores,';
+        dom.userIdError.textContent = 'UserID must be 3\u201332 alphanumeric characters or underscores.';
         show(dom.userIdError);
         return false;
     }
@@ -467,6 +470,7 @@ async function confirmBooking(){
     try{
         const res = await fetch(`${API_BASE}/bookings/2pc`,{
             method: 'POST',
+            headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body),
         });
         if(!res.ok){
@@ -529,4 +533,4 @@ async function init(){
     connectWebSocket();
 }
 
-init();
+init().catch(console.error);

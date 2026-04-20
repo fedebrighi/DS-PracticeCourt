@@ -57,12 +57,12 @@ CREATE TABLE IF NOT EXISTS utility_bookings (
 
 -- STARTING VALUES
 
-INSERT INTO fields (name, sport_type, location) VALUES
-    ('Field A', 'football', 'Zone F'),
-    ('Court B', 'padel', 'Zone P'),
-    ('Court C', 'basketball', 'Zone B');
+INSERT INTO fields (name, sport_type, location, price_per_hour) VALUES
+    ('Field A', 'football', 'Zone F', 10.00),
+    ('Court B', 'tennis', 'Zone T', 15.00),
+    ('Court C', 'basketball', 'Zone B', 8.00);
 
 INSERT INTO utilities (name, utility_type, price_per_hour) VALUES
     ('Changing Room Heating', 'heating', 5.00),
     ('Nocturnal Lighting', 'lighting', 3.50),
-    ('Padel Racket Rental', 'equipment_rental', 8.00);
+    ('Tennis Racket Rental', 'equipment_rental', 8.00);

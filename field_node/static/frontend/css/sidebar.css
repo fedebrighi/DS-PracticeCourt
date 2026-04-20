@@ -126,3 +126,19 @@
     font-size: 10px;
     color: var(--text-tertiary);
 }
+
+.event-sport-icon {
+    width: 52px;
+    height: 52px;
+    flex-shrink: 0;
+    object-fit: contain;
+    margin-right: 8px;
+    border-radius: 6px;
+    background: rgba(255,255,255,0.05);
+    padding: 4px;
+}
+
+.feed-event {
+    display: flex;
+    align-items: center;
+}

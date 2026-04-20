@@ -4,10 +4,11 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed Padel with Tennis and the price for the fields">
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added my images to the frontend page">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field_node/static/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field_node/static/frontend/css/sidebar.css" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/css/sidebar.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field_node/static/imgs/mini-basket.png" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/imgs/mini-basketball.png" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -141,14 +142,6 @@
       <workItem from="1776529948570" duration="12163000" />
       <workItem from="1776669041604" duration="2876000" />
       <workItem from="1776683714696" duration="11213000" />
-    </task>
-    <task id="LOCAL-00028" summary="Updated the main files with the new pubsub logic">
-      <option name="closed" value="true" />
-      <created>1775673408814</created>
-      <option name="number" value="00028" />
-      <option name="presentableId" value="LOCAL-00028" />
-      <option name="project" value="LOCAL" />
-      <updated>1775673408814</updated>
     </task>
     <task id="LOCAL-00029" summary="Fixed errors">
       <option name="closed" value="true" />
@@ -534,14 +527,21 @@
       <option name="project" value="LOCAL" />
       <updated>1776700729643</updated>
     </task>
-    <option name="localTasksCounter" value="77" />
+    <task id="LOCAL-00077" summary="Added my images to the frontend page">
+      <option name="closed" value="true" />
+      <created>1776703227382</created>
+      <option name="number" value="00077" />
+      <option name="presentableId" value="LOCAL-00077" />
+      <option name="project" value="LOCAL" />
+      <updated>1776703227382</updated>
+    </task>
+    <option name="localTasksCounter" value="78" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Moved &quot;imgs&quot; folder into &quot;static&quot; package" />
     <MESSAGE value="Added hero to the frontend page" />
     <MESSAGE value="Added CSS file for the hero in the frontend page" />
     <MESSAGE value="Linked the hero CSS and moved the main section under the hero" />
@@ -566,7 +566,8 @@
     <MESSAGE value="Fixed a typo error about CORS import" />
     <MESSAGE value="Fixed %d with %s of field_booking_id and added user_id, start/end_time in the responses" />
     <MESSAGE value="Fixed Padel with Tennis and the price for the fields" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed Padel with Tennis and the price for the fields" />
+    <MESSAGE value="Added my images to the frontend page" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added my images to the frontend page" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

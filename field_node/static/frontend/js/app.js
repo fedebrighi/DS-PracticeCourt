@@ -197,6 +197,8 @@ function isSlotTaken(slotTime, bookings){
     return bookings.some(b => {
         if (!b.start_time || !b.end_time ||  b.status === 'cancelled' || b.status === 'aborted') return false;
 
+        if (b.field_id !== state.selectedFieldId) return false;
+
         const bookingDate = b.start_time.substring(0, 10);
         if(bookingDate !== state.selectedDate) return false;
 
@@ -342,7 +344,7 @@ function addFeedEvent(event){
     li.style.cssText = `opacity:0; transform:translatex(12px)`;
 
     li.innerHTML = ` 
-        ${sportIcon ? `<img src="${sportIcon}" width="40" height="40" style="margin-right: 8px; object-fit: contain;" alt="">` : ''}
+        ${sportIcon ? `<img src="${sportIcon}" class="event-sport-icon" alt="">` : ''}
         <span class="event-dot ${dotClass}" aria-hidden="true"></span>
         <div class="event-body">
             <span class="event-name">

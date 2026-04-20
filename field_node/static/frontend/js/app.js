@@ -91,7 +91,7 @@ async function loadFields(){
 
         const sportTypes = [...new Set(state.fields.map(f => f.sport_type))].filter(s => s != null && s !== '');
 
-        dom.sportSelect.innerHTML = <option value="">Select a sport\u2026</option>;
+        dom.sportSelect.innerHTML = '<option value="">Select a sport\u2026</option>';
 
         sportTypes.forEach(sport => {
             const fieldsOfSport = state.fields.filter(f => f.sport_type === sport);
@@ -209,7 +209,7 @@ function checkRangeConflict(startTime, endTime){
 }
 
 /* AGGIORNAMENTO VISIVO DEGLI SLOT */
-function updateSlotHiglights(){
+function updateSlotHighlights(){
     const [startTime, endTime] = state.selectedSlots;
     const startMin = startTime ? slotToMinutes(startTime) : null;
     const endMin = endTime ? slotToMinutes(endTime) : null;
@@ -247,7 +247,7 @@ function handleSlotClick(slotTime){
             }
         }
     }
-    updateSlotHiglights();
+    updateSlotHighlights();
     calculateTotal();
 }
 
@@ -303,3 +303,87 @@ dom.dateInput.addEventListener('change', () =>{
     if(state.selectedFieldId && state.selectedDate) renderSlots();
 });
 
+/* FEED */
+
+function addFeedEvent(event){
+    hide(dom.feedEmpty);
+    const confirmed = event.event_type === 'booking_confirmed';
+    const dotClass = confirmed ? 'event-dot--confirmed' : 'event-dot--failed';
+    const timeStr = event.start_time ? isoToTime(event.start_time) : '';
+    const dateStr = event.start_time ? isoToDate(event.start_time) : '';
+    const li = document.createElement('li')
+    li.className = 'feed-event';
+    li.style.cssText = `opacity:0; transform:translateX(12px)`;
+    li.innerHTML = ` <span class="event-dot ${dotClass}" aria-hidden="true"></span>
+        <div class="event-body">
+            <span class="event-name">
+                ${confirmed ? 'Booking confirmed' : 'Booking failed'}
+                <span class="event-id">#${event.booking_id ?? '\u2014'}</span>
+            </span>
+            <span class="event-meta">Field ${event.field_id ?? '?'} \u00b7 ${event.user_id ?? '\u2014'}</span>
+            <span class="event-time">${dateStr} ${timeStr}</span>
+        </div>`;
+    dom.feedList.insertBefore(li, dom.feedList.firstChild);
+
+    /* ANIMAZIONE DI ENTRATA NEL FEED*/
+    requestAnimationFrame(() => {
+        li.style.transition = 'opacity 250ms ease, transform 250ms ease';
+        li.style.opacity = '1';
+        li.style.transform = 'translateX(0)';
+    });
+
+    while(dom.feedList.childNodes.length > FEED_MAX){
+        dom.feedList.removeChild(dom.feedList.lastChild);
+    }
+
+}
+
+/* WEBSOCKET */
+
+function handleWsEvent(event){
+    addFeedEvent(event);
+    if (state.selectedFieldId && state.selectedDate && event.field_id === state.selectedFieldId && event.start_time?.substring(0, 10) === state.selectedDate){
+        renderSlots();
+    }
+}
+
+function scheduleWsReconnect(){
+    if(wsRetry >= WS_MAX_RETRIES){
+        console.warn('[WS] Max Retries Reached - Giving Up...');
+        return;
+    }
+    const delay = Math.min(1000 * Math.pow(2, wsRetry), 30_000);
+    wsRetry++;
+    console.info(`[WS] Reconnect in ${delay}ms (attempt ${wsRetry}/${WS_MAX_RETRIES})`);
+    setTimeout(connectWebSocket, delay);
+}
+
+let ws = null;
+let wsRetry = 0;
+
+function connectWebSocket(){
+    if (ws && (ws.readyState === WebSocket.OPEN || ws.readyState === WebSocket.CONNECTING)) {
+        return
+    }
+    ws = new WebSocket(WS_URL);
+    ws.addEventListener('open', ()=>{
+        wsRetry = 0;
+        dom.wsBadge.classList.add('live-badge--online');
+        dom.wsStatus.textContent = 'LIVE';
+        console.info('[WS] Connected!');
+    });
+    ws.addEventListener('message', e=>{
+        try{
+            handleWsEvent(JSON.parse(e.data));
+        } catch(error){
+            console.error('[WS] Parse error:', error);
+        }
+    });
+    ws.addEventListener('close', ()=>{
+        dom.wsBadge.classList.remove('live-badge--online');
+        dom.wsStatus.textContent = 'OFFLINE';
+        scheduleWsReconnect();
+    });
+    ws.addEventListener('error', e=>{
+    })
+}

@@ -304,7 +304,6 @@ dom.dateInput.addEventListener('change', () =>{
 });
 
 /* FEED */
-
 function addFeedEvent(event){
     hide(dom.feedEmpty);
     const confirmed = event.event_type === 'booking_confirmed';
@@ -338,7 +337,7 @@ function addFeedEvent(event){
 
 }
 
-/* WEBSOCKET */
+/* GESTIONE DELLE WEBSOCKET */
 
 function handleWsEvent(event){
     addFeedEvent(event);
@@ -387,3 +386,147 @@ function connectWebSocket(){
     ws.addEventListener('error', e=>{
     })
 }
+
+const USER_ID_RE = /^[a-zA-Z0-9_]{3,32}$/;
+
+/* VALIDAZIONE DELL ID UTENTE */
+function validateUserId(){
+    const val = dom.userId.value.trim();
+    if(!val){
+        dom.userIdError.textContent = 'User ID is required!';
+        show(dom.userIdError);
+        return false;
+    }
+
+    if (!USER_ID_RE.test(val)){
+        dom.userIdError.textContent = 'User 3\u201332 alphanumeric characters or underscores,';
+        show(dom.userIdError);
+        return false;
+    }
+
+    hide(dom.userIdError);
+    state.userId = val;
+    return true;
+}
+
+dom.userId.addEventListener('input', () =>{
+    if(!dom.userIdError.hidden){
+        validateUserId();
+    }
+})
+
+/* GESTIONE DELLO STATO DEL BOTTONE */
+function setBtnState(s){
+    dom.confirmBtn.dataset.state = s;
+    dom.confirmBtn.disabled = (s === 'loading' || s === 'success');
+}
+
+/* CONFERMA DELLA PRENOTAZIONE*/
+async function confirmBooking(){
+    [dom.alertConflict, dom.alert2pc, dom.alertNetwork].forEach(hide);
+
+    if(!validateUserId()){
+        dom.userId.focus();
+        return;
+    }
+
+    if(!state.selectedFieldId){
+        dom.alertConflict.textContent = 'Please select a Field';
+        show(dom.alertConflict)
+        dom.sportSelect.focus();
+        return;
+    }
+
+    if(!state.selectedDate){
+        dom.alertConflict.textContent = 'Please select a Date';
+        show(dom.alertConflict)
+        dom.dateInput.focus();
+        return;
+    }
+
+    if(state.selectedSlots.length < 2){
+        dom.alertConflict.textContent = 'Please select a Time Range: click a start slot, then an end slot.';
+        show(dom.alertConflict)
+        return;
+    }
+
+    const [startSlot, endSlot] = state.selectedSlots;
+    const endMinutes = slotToMinutes(endSlot)+SLOT_DURATION;
+    const startISO = toISO(state.selectedDate, startSlot);
+    const endISO = toISO(state.selectedDate, minutesToSlot(endMinutes));
+
+    const body = {
+        field_id: state.selectedFieldId,
+        user_id: state.userId,
+        start_time: startISO,
+        end_time: endISO,
+        utility_ids: [...state.selectedUtilityIds]
+    };
+    setBtnState('loading');
+
+    try{
+        const res = await fetch(`${API_BASE}/bookings/2pc`,{
+            method: 'POST',
+            body: JSON.stringify(body),
+        });
+        if(!res.ok){
+            throw new Error(`HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        if(data.status === 'committed'){
+            setBtnState('success');
+            addFeedEvent({
+                event_type: 'booking_confirmed',
+                field_id: state.selectedFieldId,
+                booking_id: data.booking_id,
+                start_time: startISO,
+                end_time: endISO,
+                user_id: state.userId,
+            });
+            setTimeout(()=>{
+                setBtnState('idle');
+                state.selectedSlots = [];
+                renderSlots();
+            }, 2500);
+        } else {
+            setBtnState('error');
+            dom.alert2pc.textContent = `Transaction Aborted: ${data.reason ?? 'Slot Already Taken'}`;
+            show(dom.alert2pc);
+
+            addFeedEvent({
+                event_type: 'booking_failed',
+                field_id: state.selectedFieldId,
+                booking_id: null,
+                start_time: startISO,
+                end_time: endISO,
+                user_id: state.userId,
+            });
+
+            setTimeout(()=>{
+                setBtnState('idle');
+                renderSlots();
+            }, 2500);
+        }
+    } catch (error){
+        console.error('[BOOKING] Error:', error);
+        setBtnState('error');
+        show(dom.alertNetwork);
+        setTimeout(()=> setBtnState('idle'), 2500);
+    }
+}
+
+dom.confirmBtn.addEventListener('click', confirmBooking);
+
+/* INIZIALIZZAZIONE*/
+async function init(){
+    const today = new Date().toISOString().split('T')[0];
+    dom.dateInput.min = today;  // PER NON PRENOTARE DATE PASSATE
+    dom.dateInput.value = today;
+    state.selectedDate = today;
+    setBtnState('idle');
+    await Promise.all([loadFields(), loadUtilities()]);
+    connectWebSocket();
+}
+
+init();

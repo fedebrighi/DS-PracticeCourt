@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS fields (
 CREATE TABLE IF NOT EXISTS utilities (
     id INT NOT NULL AUTO_INCREMENT,
     name VARCHAR(100) NOT NULL,
-    utility_type ENUM('heating', 'lighting', 'equipment_rental') NOT NULL,
+    utility_type ENUM('room', 'heating', 'lighting', 'equipment_rental') NOT NULL,
     price_per_hour DECIMAL(6,2) NOT NULL DEFAULT 0.00,
     is_active BOOLEAN NOT NULL DEFAULT TRUE,
     PRIMARY KEY (id)
@@ -63,6 +63,7 @@ INSERT INTO fields (name, sport_type, location, price_per_hour) VALUES
     ('Court C', 'basketball', 'Zone B', 8.00);
 
 INSERT INTO utilities (name, utility_type, price_per_hour) VALUES
-    ('Changing Room Heating', 'heating', 5.00),
-    ('Nocturnal Lighting', 'lighting', 3.50),
+    ('Changing Room', 'room', 9.00),
+    ('Field Heating', 'heating', 10.00),
+    ('Nocturnal Lighting', 'lighting', 7.00),
     ('Tennis Racket Rental', 'equipment_rental', 8.00);

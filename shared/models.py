@@ -43,7 +43,7 @@ class Utility(Base):
     id: Mapped[int] = mapped_column(Integer, primary_key = True, autoincrement = True)
     name: Mapped[str] = mapped_column(String(100), nullable = False)
     utility_type: Mapped[Optional[str]] = mapped_column(
-        Enum("heating","lighting","equipment_rental", name= "utility_type_enum"),
+        Enum("room","heating","lighting","equipment_rental", name= "utility_type_enum"),
         nullable=False
     )
     price_per_hour: Mapped[float] = mapped_column(Numeric(6, 2), nullable=False, default=0.00)

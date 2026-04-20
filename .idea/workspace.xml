@@ -5,10 +5,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed Padel with Tennis and the price for the fields">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field_node/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field_node/app/repositories/field_booking_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/repositories/field_booking_repository.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field_node/static/frontend/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />

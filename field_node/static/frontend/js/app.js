@@ -300,6 +300,17 @@ async function renderSlots(){
 }
 
 dom.sportSelect.addEventListener('change', () =>{
+    const selectedFieldId = parseInt(dom.sportSelect.value);
+    const field = state.fields.find(f => f.id === selectedFieldId);
+    const previewImg = document.getElementById('sport-preview-img');
+    const previewContainer = document.getElementById('sport-preview');
+
+    if (field && field.sport_type) {
+        previewImg.src = `imgs/${field.sport_type}.png`; // es: imgs/football.png
+        previewContainer.removeAttribute('hidden');
+    } else {
+        previewContainer.setAttribute('hidden', '');
+    }
     state.selectedFieldId = dom.sportSelect.value ? parseInt(dom.sportSelect.value) : null;
     state.selectedSlots = [];
     calculateTotal();
@@ -323,10 +334,16 @@ function addFeedEvent(event){
     const endTime = event.end_time ? isoToTime(event.end_time) : '';
     const dateStr = event.start_time ? isoToDate(event.start_time) : '';
 
+    const field = state.fields.find(f => f.id === event.field_id);
+    const sportIcon = (field && field.sport_type) ? `../imgs/mini-${field.sport_type}.png` : '';
+
     const li = document.createElement('li')
     li.className = 'feed-event';
-    li.style.cssText = `opacity:0; transform:translateX(12px)`;
-    li.innerHTML = ` <span class="event-dot ${dotClass}" aria-hidden="true"></span>
+    li.style.cssText = `opacity:0; transform:translatex(12px)`;
+
+    li.innerHTML = ` 
+        ${sportIcon ? `<img src="${sportIcon}" width="40" height="40" style="margin-right: 8px; object-fit: contain;" alt="">` : ''}
+        <span class="event-dot ${dotClass}" aria-hidden="true"></span>
         <div class="event-body">
             <span class="event-name">
                 ${confirmed ? 'Booking confirmed' : 'Booking failed'}
@@ -335,6 +352,7 @@ function addFeedEvent(event){
             <span class="event-meta">Field ${event.field_id ?? '?'} \u00b7 ${event.user_id ?? '\u2014'}</span>
             <span class="event-time">${dateStr} ${startTime} - ${endTime} </span>
         </div>`;
+    
     dom.feedList.insertBefore(li, dom.feedList.firstChild);
 
     /* ANIMAZIONE DI ENTRATA NEL FEED*/
@@ -347,8 +365,27 @@ function addFeedEvent(event){
     while(dom.feedList.children.length > FEED_MAX){
         dom.feedList.removeChild(dom.feedList.lastChild);
     }
-
 }
+
+/* LISTENER SPORT CON ANTEPRIMA GRANDE */
+dom.sportSelect.addEventListener('change', () => {
+    const selectedFieldId = parseInt(dom.sportSelect.value);
+    const field = state.fields.find(f => f.id === selectedFieldId);
+    const previewImg = document.getElementById('sport-preview-img');
+    const previewContainer = document.getElementById('sport-preview');
+
+    if (field && field.sport_type) {
+        previewImg.src = `../imgs/${field.sport_type}.png`;
+        show(previewContainer);
+    } else {
+        hide(previewContainer);
+    }
+
+    state.selectedFieldId = selectedFieldId || null;
+    state.selectedSlots = [];
+    calculateTotal();
+    if(state.selectedFieldId && state.selectedDate) renderSlots();
+});
 
 /* GESTIONE DELLE WEBSOCKET */
 

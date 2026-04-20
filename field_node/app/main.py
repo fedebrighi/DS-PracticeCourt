@@ -141,7 +141,7 @@ async def create_booking_2pc(data: FieldBookingRequest, db: AsyncSession = Depen
             end_time = data.end_time,
         )
         field_booking_id = field_booking.id
-        logger.info("[2PC] txn=%d INIT | utilities=%s", field_booking_id, data.utility_ids)
+        logger.info("[2PC] txn=%s INIT | utilities=%s", field_booking_id, data.utility_ids)
 
         utility_ids = data.utility_ids or []
 
@@ -156,18 +156,18 @@ async def create_booking_2pc(data: FieldBookingRequest, db: AsyncSession = Depen
             # ALMENO UN NO PRESENTE, ROLLBACK SU TUTTI I PARTECIPANTI GIA PRESENTI
             await rollback_all(settings.utility_node_url, redis, field_booking_id, utility_booking_ids)
             await field_booking_repository.update_status(db, field_booking_id, BookingStatus.FAILED)
-            await publish_booking_event(redis, "booking_failed", field_booking_id, data.field_id, "failed")
-            logger.warning("[2PC] txn=%d ABORTED (prepare failed)", field_booking_id)
+            await publish_booking_event(redis, "booking_failed", field_booking_id, data.field_id, "failed", data.user_id, data.start_time.isoformat(), data.end_time.isoformat())
+            logger.warning("[2PC] txn=%s ABORTED (prepare failed)", field_booking_id)
             raise HTTPException(status_code=409, detail="2PC Aborted: one or more utilities are unavailable!")
 
         # FASE COMMIT, PRIMA AGGIORNA IL DB LOCALE POI NOTIFICA I PARTECIPANTI
         await field_booking_repository.update_status(db, field_booking_id, BookingStatus.CONFIRMED)
         await commit_all(settings.utility_node_url, redis, field_booking_id, utility_booking_ids)
         committed = True
-        logger.info("[2PC] txn=%d COMMITTED", field_booking_id)
+        logger.info("[2PC] txn=%s COMMITTED", field_booking_id)
 
         # NOTIFICO TUTTI I CLIENT WS CHE LO SLOT È CONFERMATO
-        await publish_booking_event(redis, "booking_confirmed", field_booking_id, data.field_id, "confirmed")
+        await publish_booking_event(redis, "booking_confirmed", field_booking_id, data.field_id, "confirmed", data.user_id, data.start_time.isoformat(), data.end_time.isoformat())
 
         updated_booking = await field_booking_repository.get_by_id(db, field_booking_id)
         return updated_booking
@@ -180,18 +180,18 @@ async def create_booking_2pc(data: FieldBookingRequest, db: AsyncSession = Depen
                 await rollback_all(settings.utility_node_url, redis, field_booking_id, utility_booking_ids)
                 await field_booking_repository.update_status(db, field_booking_id, BookingStatus.FAILED)
             except Exception as inner:
-                logger.error("[2PC] txn=%d rollback in except failed: %s", field_booking_id, inner)
+                logger.error("[2PC] txn=%s rollback in except failed: %s", field_booking_id, inner)
         raise # RILANCIA SEMPRE AL CLIENT
 
     except Exception as exc:
         # ERRORE INATTESO: TENTA ROLLBACK BEST-EFFORT
-        logger.error("[2PC] txn=%d unexpected error: %s", field_booking_id, exc)
+        logger.error("[2PC] txn=%s unexpected error: %s", field_booking_id, exc)
         if field_booking_id is not None and not committed:
             try:
                 await rollback_all(settings.utility_node_url, redis, field_booking_id, utility_booking_ids)
                 await field_booking_repository.update_status(db, field_booking_id, BookingStatus.FAILED)
             except Exception as inner:
-                logger.error("[2PC] txn=%d emergency failed: %s", field_booking_id, inner)
+                logger.error("[2PC] txn=%s emergency failed: %s", field_booking_id, inner)
         raise HTTPException(status_code=500, detail=f"Internal server error: {exc}!")
 
     finally:

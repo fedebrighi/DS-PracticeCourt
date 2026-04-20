@@ -22,20 +22,20 @@ async def _recover_one(
         utility_node_url: str,
 ) -> None:
     # TENTO IL RE-COMMIT DI UNA SINGOLA TRANSAZIONE PRPARED, SE FALLISCE -> ABORTED + FAILED
-    logger.warning("[RECOVERY] txn=%d found in PREPARED, try to re-commit | utility_booking_ids=%s", field_booking_id, utility_booking_ids)
+    logger.warning("[RECOVERY] txn=%s found in PREPARED, try to re-commit | utility_booking_ids=%s", field_booking_id, utility_booking_ids)
     try:
         async with db_manager.session() as db:
             try:
                 await commit_all(utility_node_url, redis, field_booking_id, utility_booking_ids)
                 await field_booking_repository.update_status(db, field_booking_id, BookingStatus.CONFIRMED)
-                logger.info("[RECOVERY] txn=%d re-commit OK -> CONFIRMED !", field_booking_id)
+                logger.info("[RECOVERY] txn=%s re-commit OK -> CONFIRMED !", field_booking_id)
             except (httpx.TimeoutException, httpx.RequestError, httpx.HTTPStatusError) as exc:
                 # SE UTILITY NODE NON RISPONDE NON POSSO COMPLETARE -> ABORT
-                logger.error("[RECOVERY] txn=%d re-commit failed (%s) -> ABORTED + FAILED !", field_booking_id, exc)
+                logger.error("[RECOVERY] txn=%s re-commit failed (%s) -> ABORTED + FAILED !", field_booking_id, exc)
                 await  rollback_all(utility_node_url, redis, field_booking_id, utility_booking_ids)
                 await field_booking_repository.update_status(db, field_booking_id, BookingStatus.FAILED)
     except Exception as exc:
-        logger.error("[RECOVERY] txn=%d unexpected error: %s", field_booking_id, exc)
+        logger.error("[RECOVERY] txn=%s unexpected error: %s", field_booking_id, exc)
 
 async def run_recovery(utility_node_url: str) -> None:
     # SCANSIONO REDIS CERCANDO LE TRANSAZIONI IN STATO PREPARED PER RECUPERARLE

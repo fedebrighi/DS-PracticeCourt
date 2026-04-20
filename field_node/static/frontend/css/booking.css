@@ -163,6 +163,13 @@
     color: var(--accent-hover);
 }
 
+.utility-card--selected {
+    background: var(--accent-light) !important;
+    border-color: var(--accent) !important;
+    color: var(--accent-hover) !important;
+    font-weight: 500;
+}
+
 .utility-card input[type="checkbox"]{
     display: none;
 }
@@ -340,4 +347,8 @@
 
 .mono{
     font-family: var(--font-mono), monospace;
+}
+
+[hidden] {
+    display: none !important;
 }

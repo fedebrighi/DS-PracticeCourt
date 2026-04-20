@@ -194,7 +194,7 @@ function isSlotTaken(slotTime, bookings){
     const slotStart = slotToMinutes(slotTime);
     const slotEnd = slotStart + SLOT_DURATION;
     return bookings.some(b => {
-        if (b.status === 'cancelled' || b.status === 'aborted') return false;
+        if (!b.start_time || !b.end_time ||  b.status === 'cancelled' || b.status === 'aborted') return false;
         const bStart = slotToMinutes(b.start_time.substring(11, 16));
         const bEnd = slotToMinutes(b.end_time.substring(11, 16));
         return slotStart < bEnd && slotEnd > bStart;
@@ -265,32 +265,33 @@ async function renderSlots(){
 
     try{
         const res = await fetch(`${API_BASE}/bookings?field_id=${state.selectedFieldId}&date=${state.selectedDate}`);
-        if(!res.ok){
-            throw new Error(`HTTP ${res.status}`);
-        }
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
         state.bookings = await res.json();
+
+        dom.slotGrid.innerHTML = '';
+        generateTimeSlots().forEach(slotTime => {
+            const taken = isSlotTaken(slotTime, state.bookings);
+            const pill = document.createElement('button');
+            pill.type = 'button';
+            pill.className = taken ? 'slot-pill slot-pill--taken' : 'slot-pill';
+            pill.textContent = slotTime;
+            pill.dataset.time = slotTime;
+            pill.disabled = taken;
+            pill.setAttribute('aria-label', `Slot ${slotTime}${taken ? ' \u2014 occupato' : ''}`);
+            if (!taken) {
+                pill.addEventListener('click', () => handleSlotClick(slotTime));
+            }
+            dom.slotGrid.appendChild(pill);
+        });
+
     }catch (error){
         console.error('[BOOKINGS] Fetch Failed:', error);
-        state.bookings = []
+        state.bookings = [];
+        dom.slotGrid.innerHTML = '<p>Error while loading slot</p>';
+    } finally{
+            hide(dom.slotSkeleton);
+            show(dom.slotGrid);
     }
-
-    dom.slotGrid.innerHTML = '';
-    generateTimeSlots().forEach(slotTime => {
-        const taken = isSlotTaken(slotTime, state.bookings);
-        const pill = document.createElement('button');
-        pill.type = 'button';
-        pill.className = taken ? 'slot-pill slot-pill--taken' : 'slot-pill';
-        pill.textContent = slotTime;
-        pill.dataset.time = slotTime;
-        pill.disabled = taken;
-        pill.setAttribute('aria-label', `Slot ${slotTime}${taken ? ' \u2014 occupato' : ''}`);
-        if(!taken){
-            pill.addEventListener('click', () => handleSlotClick(slotTime));
-        }
-        dom.slotGrid.appendChild(pill);
-    });
-    hide(dom.slotSkeleton);
-    show(dom.slotGrid);
 }
 
 dom.sportSelect.addEventListener('change', () =>{
@@ -312,8 +313,11 @@ function addFeedEvent(event){
     hide(dom.feedEmpty);
     const confirmed = event.event_type === 'booking_confirmed';
     const dotClass = confirmed ? 'event-dot--confirmed' : 'event-dot--failed';
-    const timeStr = event.start_time ? isoToTime(event.start_time) : '';
+
+    const startTime = event.start_time ? isoToTime(event.start_time) : '';
+    const endTime = event.end_time ? isoToTime(event.end_time) : '';
     const dateStr = event.start_time ? isoToDate(event.start_time) : '';
+
     const li = document.createElement('li')
     li.className = 'feed-event';
     li.style.cssText = `opacity:0; transform:translateX(12px)`;
@@ -321,10 +325,10 @@ function addFeedEvent(event){
         <div class="event-body">
             <span class="event-name">
                 ${confirmed ? 'Booking confirmed' : 'Booking failed'}
-                <span class="event-id">#${event.booking_id ?? '\u2014'}</span>
+                <span class="event-id">#${event.field_booking_id ?? '\u2014'}</span>
             </span>
             <span class="event-meta">Field ${event.field_id ?? '?'} \u00b7 ${event.user_id ?? '\u2014'}</span>
-            <span class="event-time">${dateStr} ${timeStr}</span>
+            <span class="event-time">${dateStr} ${startTime} - ${endTime} </span>
         </div>`;
     dom.feedList.insertBefore(li, dom.feedList.firstChild);
 
@@ -473,21 +477,13 @@ async function confirmBooking(){
             headers: {'Content-Type': 'application/json'},
             body: JSON.stringify(body),
         });
-        if(!res.ok){
-            throw new Error(`HTTP ${res.status}`);
-        }
+        if(!res.ok) throw new Error(`HTTP ${res.status}`);
 
         const data = await res.json();
-        if(data.status === 'committed'){
+
+        if(data.status === 'confirmed'){
             setBtnState('success');
-            addFeedEvent({
-                event_type: 'booking_confirmed',
-                field_id: state.selectedFieldId,
-                booking_id: data.booking_id,
-                start_time: startISO,
-                end_time: endISO,
-                user_id: state.userId,
-            });
+
             setTimeout(()=>{
                 setBtnState('idle');
                 state.selectedSlots = [];

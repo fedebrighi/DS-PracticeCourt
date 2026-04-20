@@ -55,7 +55,7 @@
             <div class="form-row">
                 <label class="form-label" for="user-id">Who are you?</label>
                 <input class="form-input" type="text" id="user-id" placeholder="e.g. mario_rossi" autocomplete="username" required />
-                <span class="form-error" id="user-id-error" aria-live="polite"></span>
+                <span class="form-error" id="user-id-error" aria-live="polite" hidden></span>
             </div>
 
             <!-- SEZIONE DI SCELTA DELLO SPORT E DELLA DATA -->
@@ -80,7 +80,7 @@
                     <span class="form-hint">(Click first and last to select a range of hours)</span>
                 </span>
 
-                <div class="slot-skeleton" id="slot-skeleton" aria-hidden="true">
+                <div class="slot-skeleton" id="slot-skeleton" aria-hidden="true" hidden>
                     <div class="skeleton"></div><div class="skeleton"></div>
                     <div class="skeleton"></div><div class="skeleton"></div>
                     <div class="skeleton"></div><div class="skeleton"></div>
@@ -114,10 +114,8 @@
                 </div>
 
                 <div class="alert alert--error" id="alert-conflict" role="alert" hidden>
-                    <strong>CONFLICT:</strong> slot already taken. Please select another time.
                 </div>
                 <div class="alert alert--error" id="alert-2pc" role="alert" hidden>
-                    <strong>TRANSACTION FAILED (2PC):</strong> not all participants voted YES. Try again.
                 </div>
                 <div class="alert alert--warning" id="alert-network" role="alert" hidden>
                     <strong>NETWORK ERROR:</strong> cannot reach the server. Are Docker Containers running?

@@ -141,30 +141,58 @@ async def create_booking_2pc(data: FieldBookingRequest, db: AsyncSession = Depen
             end_time = data.end_time,
         )
         field_booking_id = field_booking.id
-        logger.info("[2PC] txn=%s INIT | utilities=%s", field_booking_id, data.utility_ids)
+
+        print("\n" + "="*60)
+        logger.info(">>> [2PC TRANSACTION START] txn_id=%s", field_booking_id)
+        logger.info(">>> Booking Field %s for Users: %s", data.field_id, data.user_id)
+        print("="*60)
 
         utility_ids = data.utility_ids or []
 
-        # FASE PREPARE: CHIEDE AD OGNI UTILITY DI VOTARE YES/NO E RACCOGLE GLI IDS
-        success, utility_booking_ids = await prepare_all(
-            settings.utility_node_url,
-            redis,
-            field_booking_id,
-            utility_ids
-        )
+        # FASE 1 PREPARE: CHIEDE AD OGNI UTILITY DI VOTARE YES/NO E RACCOGLE GLI IDS
+        logger.info("\n[PHASE 1] === PREPARE PHASE ===")
+        logger.info("[2PC] Requesting votes from Utility Node at: %s", settings.utility_node_url)
+
+        try:
+            success, utility_booking_ids = await prepare_all(
+                settings.utility_node_url,
+                redis,
+                field_booking_id,
+                utility_ids
+            )
+        except Exception as e:
+            print("\n" + "!"*60)
+            logger.error("[!!!] NODE FAILURE DETECTED: Utility Node is Unreachable!")
+            logger.error("[!!!] Error Details: %s", e)
+            print("!"*60)
+            raise HTTPException(status_code=503, detail="Utility Node Down, starting rollback")
+
         if not success:
             # ALMENO UN NO PRESENTE, ROLLBACK SU TUTTI I PARTECIPANTI GIA PRESENTI
+            logger.warning("\n[PHASE 1] RESULT: Utility node Voted [ABORT/NO]")
+            logger.info("[PHASE 2] === ROLLBACK PHASE (Abort) ===")
+
             await rollback_all(settings.utility_node_url, redis, field_booking_id, utility_booking_ids)
             await field_booking_repository.update_status(db, field_booking_id, BookingStatus.FAILED)
             await publish_booking_event(redis, "booking_failed", field_booking_id, data.field_id, "failed", data.user_id, data.start_time.isoformat(), data.end_time.isoformat())
-            logger.warning("[2PC] txn=%s ABORTED (prepare failed)", field_booking_id)
+
+            logger.info("[2PC TRANSACTION ABORTED] txn=%s ABORTED (prepare failed)", field_booking_id)
             raise HTTPException(status_code=409, detail="2PC Aborted: one or more utilities are unavailable!")
+
+        #  SE SIAMO QUI ALLORA IL VOTO E' YES
+        logger.info("\n[PHASE 1] RESULT: Utility Node voted [READY/YES]")
+        logger.info("[PHASE 2] === COMMIT PHASE ===")
 
         # FASE COMMIT, PRIMA AGGIORNA IL DB LOCALE POI NOTIFICA I PARTECIPANTI
         await field_booking_repository.update_status(db, field_booking_id, BookingStatus.CONFIRMED)
+        logger.info("[2PC] S1: Local Field Database -> Status: CONFIRMED")
+
         await commit_all(settings.utility_node_url, redis, field_booking_id, utility_booking_ids)
+        logger.info("[2PC] S2: Global Commit sent to Utility Nodes")
+
         committed = True
-        logger.info("[2PC] txn=%s COMMITTED", field_booking_id)
+        logger.info(">>> [2PC TRANSACTION SUCCESS] txn=%s COMMITTED", field_booking_id)
+        print("="*60 + "\n")
 
         # NOTIFICO TUTTI I CLIENT WS CHE LO SLOT È CONFERMATO
         await publish_booking_event(redis, "booking_confirmed", field_booking_id, data.field_id, "confirmed", data.user_id, data.start_time.isoformat(), data.end_time.isoformat())

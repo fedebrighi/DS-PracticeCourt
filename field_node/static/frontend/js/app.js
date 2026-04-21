@@ -195,7 +195,8 @@ function isSlotTaken(slotTime, bookings){
     const slotEnd = slotStart + SLOT_DURATION;
 
     return bookings.some(b => {
-        if (!b.start_time || !b.end_time ||  b.status === 'cancelled' || b.status === 'aborted') return false;
+        const status = b.status ? String(b.status).toLowerCase() : '';
+        if (!b.start_time || !b.end_time ||  status === 'cancelled' || status === 'aborted' || status === 'failed') return false;
 
         if (b.field_id !== state.selectedFieldId) return false;
 

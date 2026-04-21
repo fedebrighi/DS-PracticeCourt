@@ -51,6 +51,7 @@ class UtilityBase(BaseModel): # CAMPI INVIATI DAL CLIENT QUANDO CREA/AGGIORNA UN
     description:Optional[str] = Field(default=None, max_length=500)
     price_per_hour: float = 0.0
     utility_type: str
+    is_hourly: bool = True
 
 class UtilityResponse(_ORMBase, UtilityBase):
     model_config = ConfigDict(from_attributes=True)

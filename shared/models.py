@@ -47,6 +47,7 @@ class Utility(Base):
         nullable=False
     )
     price_per_hour: Mapped[float] = mapped_column(Numeric(6, 2), nullable=False, default=0.00)
+    is_hourly: Mapped[bool] = mapped_column(Boolean, nullable = False, default=True)
     is_active: Mapped[bool] = mapped_column(Boolean, nullable = False, default=True)
 
 class UtilityBooking(Base):

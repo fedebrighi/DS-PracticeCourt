@@ -260,3 +260,28 @@ async def ws_availability(websocket: WebSocket):
 async def trigger_recovery():
     await run_recovery(settings.utility_node_url)
     return {"ok": True, "message": "Recovery job executed!"}
+
+# ENDPOINT DI CANCELLAZIONE PRENOTAZIONI
+@app.delete("/bookings/{booking_id}", status_code=200)
+async def cancel_booking(booking_id: int, db: AsyncSession = Depends(get_db), redis: Redis = Depends(get_redis)):
+    # RECUPERO LA PRENOTAZIONE
+    booking = await field_booking_repository.get_by_id(db, booking_id)
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found!")
+
+    # AGGIORNO LO STATO DELLA PRENOTAZIONE IN CANCELLED
+    await field_booking_repository.update_status(db, booking_id, BookingStatus.CANCELLED)
+
+    # NOTIFICO TRAMITE WS
+    await publish_booking_event(
+        redis,
+        "booking_cancelled",
+        booking_id,
+        booking.field_id,
+        "cancelled",
+        booking.user_id,
+        booking.start_time.isoformat(),
+        booking.end_time.isoformat()
+    )
+    logger.info(f"[CANCEL] Booking #{booking_id} cancelled by user!")
+    return {"ok": True, "message": "Booking Cancelled"}

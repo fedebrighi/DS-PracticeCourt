@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed problem that visually books a slot even if the booking failed">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Modified the utilities: now I have hourly and not hourly utilities">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/main.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field_node/app/repositories/field_booking_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/repositories/field_booking_repository.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field_node/static/frontend/css/sidebar.css" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/css/sidebar.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/shared/models.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/shared/schemas.py" beforeDir="false" afterPath="$PROJECT_DIR$/shared/schemas.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -143,23 +144,7 @@
       <workItem from="1776529948570" duration="12163000" />
       <workItem from="1776669041604" duration="2876000" />
       <workItem from="1776683714696" duration="11213000" />
-      <workItem from="1776786087115" duration="3997000" />
-    </task>
-    <task id="LOCAL-00031" summary="Added a test for the web sockets logic implemented">
-      <option name="closed" value="true" />
-      <created>1775750857306</created>
-      <option name="number" value="00031" />
-      <option name="presentableId" value="LOCAL-00031" />
-      <option name="project" value="LOCAL" />
-      <updated>1775750857306</updated>
-    </task>
-    <task id="LOCAL-00032" summary="Added setup for logging messages">
-      <option name="closed" value="true" />
-      <created>1775840316592</created>
-      <option name="number" value="00032" />
-      <option name="presentableId" value="LOCAL-00032" />
-      <option name="project" value="LOCAL" />
-      <updated>1775840316592</updated>
+      <workItem from="1776786087115" duration="8619000" />
     </task>
     <task id="LOCAL-00033" summary="Updated mains with setup for logging">
       <option name="closed" value="true" />
@@ -537,15 +522,29 @@
       <option name="project" value="LOCAL" />
       <updated>1776705676386</updated>
     </task>
-    <option name="localTasksCounter" value="80" />
+    <task id="LOCAL-00080" summary="Fixed problem that visually books a slot even if the booking failed">
+      <option name="closed" value="true" />
+      <created>1776790475563</created>
+      <option name="number" value="00080" />
+      <option name="presentableId" value="LOCAL-00080" />
+      <option name="project" value="LOCAL" />
+      <updated>1776790475564</updated>
+    </task>
+    <task id="LOCAL-00081" summary="Modified some parameters on the database">
+      <option name="closed" value="true" />
+      <created>1776791737118</created>
+      <option name="number" value="00081" />
+      <option name="presentableId" value="LOCAL-00081" />
+      <option name="project" value="LOCAL" />
+      <updated>1776791737118</updated>
+    </task>
+    <option name="localTasksCounter" value="82" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Moved the whole &quot;frontend&quot; package into the &quot;static&quot; one to link imgs to the page" />
-    <MESSAGE value="Added the booking section in the frontend page" />
     <MESSAGE value="Linked booking.css stylesheet to the frontend page" />
     <MESSAGE value="Fixed simple things" />
     <MESSAGE value="Removed unused &quot;style.css&quot; and added &quot;booking.css&quot; for the booking section in the frontend page" />
@@ -569,7 +568,9 @@
     <MESSAGE value="Fixed same slot booked in different sport fields + images upscaled" />
     <MESSAGE value="Simply added new utility" />
     <MESSAGE value="Fixed problem that visually books a slot even if the booking failed" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed problem that visually books a slot even if the booking failed" />
+    <MESSAGE value="Modified some parameters on the database" />
+    <MESSAGE value="Modified the utilities: now I have hourly and not hourly utilities" />
+    <option name="LAST_COMMIT_MESSAGE" value="Modified the utilities: now I have hourly and not hourly utilities" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

@@ -132,7 +132,10 @@ function calculateTotal() {
     const fieldCost = field.price_per_hour * hours;
     const utilityCost = state.utilities
         .filter(u => state.selectedUtilityIds.includes(u.id))
-        .reduce((sum, u) => sum + u.price_per_hour * hours, 0);
+        .reduce((sum, u) => {
+            const amount = u.is_hourly ? (u.price_per_hour * hours) : u.price_per_hour
+            return sum + amount
+        }, 0);
 
     dom.bookingTotal.textContent = `\u20ac${(fieldCost + utilityCost).toFixed(2)}`;
 }
@@ -327,6 +330,23 @@ dom.dateInput.addEventListener('change', () =>{
     if(state.selectedFieldId && state.selectedDate) renderSlots();
 });
 
+/* CANCELLAZIONE PRENOTAZIONE*/
+async function deleteBooking(id){
+    if(!confirm(`Are you sure to cancel the booking #${id}?`)) return;
+    try{
+        const res = await fetch(`${API_BASE}/bookings/${id}`, {
+        method: 'DELETE'});
+        if (!res.ok) {
+            const error = await res.json();
+            throw new Error(error.detail || "Error while cancelling booking");
+        }
+        console.log(`Cancellation request sent for #${id}`);
+    } catch (error){
+        console.error("Delete error:", error);
+        alert("Impossible to delete booking" + error.message);
+    }
+}
+
 /* FEED */
 function addFeedEvent(event){
     hide(dom.feedEmpty);
@@ -340,20 +360,31 @@ function addFeedEvent(event){
     const field = state.fields.find(f => f.id === event.field_id);
     const sportIcon = (field && field.sport_type) ? `../imgs/mini-${field.sport_type}.png` : '';
 
+    const isConfirmed = event.event_type === 'booking_confirmed';
+
     const li = document.createElement('li')
     li.className = 'feed-event';
     li.style.cssText = `opacity:0; transform:translatex(12px)`;
 
     li.innerHTML = ` 
-        ${sportIcon ? `<img src="${sportIcon}" class="event-sport-icon" alt="">` : ''}
-        <span class="event-dot ${dotClass}" aria-hidden="true"></span>
-        <div class="event-body">
-            <span class="event-name">
-                ${confirmed ? 'Booking confirmed' : 'Booking failed'}
-                <span class="event-id">#${event.field_booking_id ?? '\u2014'}</span>
-            </span>
-            <span class="event-meta">Field ${event.field_id ?? '?'} \u00b7 ${event.user_id ?? '\u2014'}</span>
-            <span class="event-time">${dateStr} ${startTime} - ${endTime} </span>
+        <div style="display: flex; align-items: center; width: 100%; gap: 8px;">
+            ${sportIcon ? `<img src="${sportIcon}" class="event-sport-icon" alt="">` : ''}
+            <span class="event-dot ${dotClass}" aria-hidden="true"></span>
+            
+            <div class="event-body" style="flex-grow: 1;">
+                <span class="event-name">
+                    ${confirmed ? 'Booking confirmed' : 'Booking failed'}
+                    <span class="event-id">#${event.field_booking_id ?? '\u2014'}</span>
+                </span>
+                <span class="event-meta">Field ${event.field_id ?? '?'} \u00b7 ${event.user_id ?? '\u2014'}</span>
+                <span class="event-time" style="display: block">${dateStr} ${startTime} - ${endTime} </span>
+            </div>   
+            
+            ${confirmed ? `
+                <button onclick="deleteBooking(${event.field_booking_id})" class="btn-delete" title="Cancel Booking">
+                    &times;
+                </button>
+            ` : ''}
         </div>`;
     
     dom.feedList.insertBefore(li, dom.feedList.firstChild);
@@ -394,8 +425,10 @@ dom.sportSelect.addEventListener('change', () => {
 
 function handleWsEvent(event){
     addFeedEvent(event);
-    if (state.selectedFieldId && state.selectedDate && event.field_id === state.selectedFieldId && event.start_time?.substring(0, 10) === state.selectedDate){
-        renderSlots();
+    if(event.event_type === 'booking_confirmed' || event.event_type === 'booking_cancelled'){
+        if (state.selectedFieldId && state.selectedDate && event.field_id === state.selectedFieldId && event.start_time?.substring(0, 10) === state.selectedDate){
+            renderSlots();
+        }
     }
 }
 

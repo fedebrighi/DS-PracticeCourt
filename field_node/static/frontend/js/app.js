@@ -392,7 +392,7 @@ function addFeedEvent(event){
                 <span class="event-time" style="display: block">${dateStr} ${startTime} - ${endTime} </span>
             </div>   
             
-            ${(isConfirmed && isMine) ? `
+            ${(isConfirmed && isMine && !event.hideDelete) ? `
                 <button onclick="deleteBooking(${event.field_booking_id})" class="btn-delete" title="Cancel Booking">
                     &times;
                 </button>
@@ -510,6 +510,7 @@ function validateUserId(){
 
     hide(dom.userIdError);
     state.userId = val;
+    sessionStorage.setItem('court_user_id', val);
     return true;
 }
 
@@ -615,14 +616,70 @@ async function confirmBooking(){
 
 dom.confirmBtn.addEventListener('click', confirmBooking);
 
+/* CARICA LA CRONOLOGIA DELLE PRENOTAZIONI NEL FEED*/
+async function loadFeedHistory() {
+    try {
+        const res = await fetch(`${API_BASE}/bookings`);
+        let history = await res.json();
+        history.sort((a, b) => a.id - b.id);
+
+        history.forEach((booking) => {
+            const status = String(booking.status).toLowerCase();
+
+            if (status === 'cancelled') {
+                addFeedEvent({
+                    event_type: 'booking_confirmed',
+                    field_booking_id: booking.id,
+                    field_id: booking.field_id,
+                    user_id: booking.user_id,
+                    start_time: booking.start_time,
+                    end_time: booking.end_time,
+                    hideDelete: true
+                });
+
+                addFeedEvent({
+                    event_type: 'booking_cancelled',
+                    field_booking_id: booking.id,
+                    field_id: booking.field_id,
+                    user_id: booking.user_id,
+                    start_time: booking.start_time,
+                    end_time: booking.end_time
+                });
+            }
+            else {
+                const eventTypeMap = {
+                    'confirmed': 'booking_confirmed',
+                    'failed': 'booking_failed'
+                };
+
+                addFeedEvent({
+                    event_type: eventTypeMap[status] || 'booking_failed',
+                    field_booking_id: booking.id,
+                    field_id: booking.field_id,
+                    user_id: booking.user_id,
+                    start_time: booking.start_time,
+                    end_time: booking.end_time
+                });
+            }
+        });
+    } catch (error) {
+        console.error('[FEED] History load failed:', error);
+    }
+}
 /* INIZIALIZZAZIONE*/
 async function init(){
     const today = new Date().toISOString().split('T')[0];
+    const savedUser = sessionStorage.getItem('court_user_id');
+    if(savedUser){
+        dom.userId.value = savedUser;
+        state.userId = savedUser;
+    }
     dom.dateInput.min = today;  // PER NON PRENOTARE DATE PASSATE
     dom.dateInput.value = today;
     state.selectedDate = today;
     setBtnState('idle');
     await Promise.all([loadFields(), loadUtilities()]);
+    await loadFeedHistory();
     connectWebSocket();
 }
 

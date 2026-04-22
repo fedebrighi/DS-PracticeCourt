@@ -15,11 +15,13 @@ _LOCK_TTL_MS = 5_000  # 5 SECONDI PER LA SEZIONE CRITICA
 
 async def get_all(db: AsyncSession, field_id: Optional[int] = None, date: Optional[str] = None) -> list[FieldBooking]:
     query = select(FieldBooking)
-    query = query.where(FieldBooking.status.in_([BookingStatus.PENDING, BookingStatus.CONFIRMED]))
+
     if field_id is not None:
         query = query.where(FieldBooking.field_id == field_id)
     if date is not None:
         query = query.where(func.date(FieldBooking.start_time) == date)
+
+    query = query.order_by(FieldBooking.created_at.desc())
     result = await db.execute(query)
     return list(result.scalars().all())
 

@@ -94,7 +94,7 @@ class TestFaultTolerance:
             field_resp = await client.post("/fields", json={
                 "name": "Abort Test Field",
                 "location": "Zone P",
-                "sport_type": "padel",
+                "sport_type": "tennis",
                 "price_per_hour": 9.0,
             })
             assert field_resp.status_code == 201

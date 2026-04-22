@@ -4,10 +4,12 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added possibility to cancel a booking">
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed Error: now the X vanishes after the cancellation and not everyone can cancel someone's booking">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field_node/app/repositories/field_booking_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/repositories/field_booking_repository.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/static/frontend/css/sidebar.css" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/css/sidebar.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests/test_fault_tolerance.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_fault_tolerance.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -142,15 +144,7 @@
       <workItem from="1776669041604" duration="2876000" />
       <workItem from="1776683714696" duration="11213000" />
       <workItem from="1776786087115" duration="9404000" />
-      <workItem from="1776848197631" duration="1050000" />
-    </task>
-    <task id="LOCAL-00034" summary="Fixed small error">
-      <option name="closed" value="true" />
-      <created>1775841296080</created>
-      <option name="number" value="00034" />
-      <option name="presentableId" value="LOCAL-00034" />
-      <option name="project" value="LOCAL" />
-      <updated>1775841296080</updated>
+      <workItem from="1776848197631" duration="4414000" />
     </task>
     <task id="LOCAL-00035" summary="Fixed errors occurred during terminal tests">
       <option name="closed" value="true" />
@@ -536,14 +530,21 @@
       <option name="project" value="LOCAL" />
       <updated>1776796617368</updated>
     </task>
-    <option name="localTasksCounter" value="83" />
+    <task id="LOCAL-00083" summary="Fixed Error: now the X vanishes after the cancellation and not everyone can cancel someone's booking">
+      <option name="closed" value="true" />
+      <created>1776849538090</created>
+      <option name="number" value="00083" />
+      <option name="presentableId" value="LOCAL-00083" />
+      <option name="project" value="LOCAL" />
+      <updated>1776849538091</updated>
+    </task>
+    <option name="localTasksCounter" value="84" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Fixed simple things" />
     <MESSAGE value="Removed unused &quot;style.css&quot; and added &quot;booking.css&quot; for the booking section in the frontend page" />
     <MESSAGE value="Added Total + Confirm section to the frontend page" />
     <MESSAGE value="Added CSS stylesheet for the total + confirm section in the frontend page" />
@@ -568,7 +569,8 @@
     <MESSAGE value="Modified some parameters on the database" />
     <MESSAGE value="Modified the utilities: now I have hourly and not hourly utilities" />
     <MESSAGE value="Added possibility to cancel a booking" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added possibility to cancel a booking" />
+    <MESSAGE value="Fixed Error: now the X vanishes after the cancellation and not everyone can cancel someone's booking" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed Error: now the X vanishes after the cancellation and not everyone can cancel someone's booking" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

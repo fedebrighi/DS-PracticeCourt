@@ -350,8 +350,21 @@ async function deleteBooking(id){
 /* FEED */
 function addFeedEvent(event){
     hide(dom.feedEmpty);
-    const confirmed = event.event_type === 'booking_confirmed';
-    const dotClass = confirmed ? 'event-dot--confirmed' : 'event-dot--failed';
+
+    const type = event.event_type;
+    const isConfirmed =  type === 'booking_confirmed';
+    const isCancelled = type === 'booking_cancelled';
+    const isFailed = type === 'booking_failed';
+
+    let dotClass = 'event-dot--failed';
+    if (isConfirmed) dotClass = 'event-dot--confirmed';
+    if (isCancelled) dotClass = 'event-dot--cancelled';
+
+    let statusText = 'Booking Failed';
+    if (isConfirmed) statusText = 'Booking Confirmed';
+    if (isCancelled) statusText = 'Booking Cancelled';
+
+    const isMine = event.user_id === state.userId;
 
     const startTime = event.start_time ? isoToTime(event.start_time) : '';
     const endTime = event.end_time ? isoToTime(event.end_time) : '';
@@ -360,10 +373,9 @@ function addFeedEvent(event){
     const field = state.fields.find(f => f.id === event.field_id);
     const sportIcon = (field && field.sport_type) ? `../imgs/mini-${field.sport_type}.png` : '';
 
-    const isConfirmed = event.event_type === 'booking_confirmed';
-
     const li = document.createElement('li')
     li.className = 'feed-event';
+    if(event.field_booking_id)  li.setAttribute('data-booking-id', event.field_booking_id);
     li.style.cssText = `opacity:0; transform:translatex(12px)`;
 
     li.innerHTML = ` 
@@ -373,14 +385,14 @@ function addFeedEvent(event){
             
             <div class="event-body" style="flex-grow: 1;">
                 <span class="event-name">
-                    ${confirmed ? 'Booking confirmed' : 'Booking failed'}
+                    ${statusText}
                     <span class="event-id">#${event.field_booking_id ?? '\u2014'}</span>
                 </span>
                 <span class="event-meta">Field ${event.field_id ?? '?'} \u00b7 ${event.user_id ?? '\u2014'}</span>
                 <span class="event-time" style="display: block">${dateStr} ${startTime} - ${endTime} </span>
             </div>   
             
-            ${confirmed ? `
+            ${(isConfirmed && isMine) ? `
                 <button onclick="deleteBooking(${event.field_booking_id})" class="btn-delete" title="Cancel Booking">
                     &times;
                 </button>
@@ -425,8 +437,15 @@ dom.sportSelect.addEventListener('change', () => {
 
 function handleWsEvent(event){
     addFeedEvent(event);
-    if(event.event_type === 'booking_confirmed' || event.event_type === 'booking_cancelled'){
-        if (state.selectedFieldId && state.selectedDate && event.field_id === state.selectedFieldId && event.start_time?.substring(0, 10) === state.selectedDate){
+    if(event.event_type === 'booking_cancelled') {
+        const selector = `li[data-booking-id="${event.field_booking_id}"] .btn-delete`;
+        const oldConfirmedBtn = document.querySelector(selector);
+        if (oldConfirmedBtn) {
+            oldConfirmedBtn.remove();
+        }
+    }
+    if(event.event_type === 'booking_cancelled' || event.event_type === 'booking_confirmed') {
+        if (state.selectedFieldId && state.selectedDate && event.field_id === state.selectedFieldId && event.start_time?.substring(0, 10) === state.selectedDate) {
             renderSlots();
         }
     }

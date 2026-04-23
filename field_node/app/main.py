@@ -1,11 +1,13 @@
 import asyncio
 import logging
+import json
 from typing import Optional
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Depends, HTTPException, WebSocket, WebSocketDisconnect
 from pygments.lexers import stata
 from redis.asyncio import Redis
+from sqlalchemy.event.base import slots_dispatcher
 from sqlalchemy.ext.asyncio import AsyncSession
 from starlette.staticfiles import StaticFiles
 
@@ -227,7 +229,7 @@ async def create_booking_2pc(data: FieldBookingRequest, db: AsyncSession = Depen
         await lock.release(lock_key, token)
 
 @app.websocket("/ws/availability")
-async def ws_availability(websocket: WebSocket):
+async def ws_availability(websocket: WebSocket, redis: Redis = Depends(get_redis)):
     await websocket.accept()
     logger.info("[WS] client connected!")
 
@@ -246,7 +248,57 @@ async def ws_availability(websocket: WebSocket):
     task = asyncio.create_task(_listen())
     try:
         while True:
-            await websocket.receive_text()
+            # IL SERVER ASCOLTA I MESSAGGI DAL BROWSER
+            text_data = await websocket.receive_text()
+            try:
+                payload = json.loads(text_data)
+                action = payload.get("action")
+                # SE L'UTENTE SELEZIONA UNO SLOT
+                if action == "hold_slots":
+                    field_id = payload.get("field_id")
+                    date = payload.get("date")
+                    slots = payload.get("slots", [])
+                    user_id = payload.get("user_id")
+
+                    # SALVO CON UN TTL DI 60 SECONDO
+                    for slot in slots:
+                        hold_key = f"hold:{field_id}:{date}:{slot}"
+                        await redis.set(hold_key, user_id, ex=60)
+
+                    hold_event = {
+                        "event_type": "slots_held",
+                        "field_id": field_id,
+                        "date": date,
+                        "slots": slots,
+                        "user_id": user_id
+                    }
+                    await redis.publish(AVAILABILITY_CHANNEL, json.dumps(hold_event))
+
+                # QUESTO SAREBBE IL CASO IN CUI L'UTENTE DESELEZIONA O CONFERMA UNO SLOT
+                elif action == "release_slots":
+                    field_id = payload.get("field_id")
+                    date = payload.get("date")
+                    slots = payload.get("slots", [])
+                    user_id = payload.get("user_id")
+
+                    # INVECE CHE SALVARE CANCELLO
+                    for slot in slots:
+                        hold_key = f"hold:{field_id}:{date}:{slot}"
+                        await redis.delete(hold_key)
+
+                    # AVVISO TUTTI DELLA RI-DISPONIBILITA DEGLI SLTOS
+                    release_event = {
+                        "event_type": "slots_released",
+                        "field_id": field_id,
+                        "date": date,
+                        "slots": slots,
+                        "user_id": user_id
+                    }
+                    await redis.publish(AVAILABILITY_CHANNEL, json.dumps(release_event))
+            except json.JSONDecodeError:
+                logger.error("[WS] Invalid JSON Received!")
+            except Exception as e:
+                logger.error(f"[WS] Error processing message: {e}")
     except WebSocketDisconnect:
         logger.info("[WS] client disconnected!")
     finally:

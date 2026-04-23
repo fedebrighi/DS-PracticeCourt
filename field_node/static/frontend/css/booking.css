@@ -121,6 +121,28 @@
     background: var(--accent-light);
 }
 
+.slot-pill--taken {
+    color: var(--text-tertiary);
+    text-decoration: line-through;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.slot-pill--held{
+    background: #fff3cd !important;
+    border-color: #ffeeba !important;
+    color: #856404 !important;
+    cursor: not-allowed;
+    position: relative;
+}
+
+.slot-pill--held::after{
+    content: "Holding...";
+    font-size: 8px;
+    position: absolute;
+    bottom: 2px;
+}
+
 .slot-pill--selected {
     background: var(--accent-light);
     border-color: var(--accent);
@@ -128,12 +150,6 @@
     font-weight: 500;
 }
 
-.slot-pill--taken {
-    color: var(--text-tertiary);
-    text-decoration: line-through;
-    cursor: not-allowed;
-    opacity: 0.6;
-}
 
 .utility-grid{
     display: flex;

@@ -78,6 +78,30 @@ async def create_field(data: FieldBase, db: AsyncSession = Depends(get_db)):
 async def list_bookings(field_id: Optional[int] = None, date: Optional[str] = None, db: AsyncSession = Depends(get_db)):
     return await field_booking_repository.get_all(db, field_id=field_id, date=date)
 
+@app.get("/bookings/holds")
+async def get_active_holds(field_id: int, date: str, redis: Redis = Depends(get_redis)):
+    try:
+        pattern = f"hold:{field_id}:{date}:*"
+        keys = await redis.keys(pattern)
+
+        holds = {}
+        for key in keys:
+            key_str = key.decode("utf-8") if isinstance(key, bytes) else str(key)
+
+            parts = key_str.split(":", 3)
+            slot_time = parts[3]
+
+            user_id = await redis.get(key)
+            if user_id:
+                user_id_str = user_id.decode("utf-8") if isinstance(user_id, bytes) else str(user_id)
+                holds[slot_time] = user_id_str
+
+        return holds
+
+    except Exception as e:
+        logger.error(f"[HOLDS ERROR] {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
 @app.get("/bookings/{booking_id}",response_model= FieldBookingResponse) # RESTITUISCE UNA PRENOTAZIONE PER ID
 async def get_booking(booking_id: int, db: AsyncSession = Depends(get_db)):
     booking = await field_booking_repository.get_by_id(db, booking_id)

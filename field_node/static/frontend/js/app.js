@@ -12,6 +12,8 @@ const SLOT_DURATION = 30; /*DURATA SLOT CALENDARIO*/
 const WS_MAX_RETRIES = 8;
 const FEED_MAX = 50;
 
+let holdTimer = null;
+
 /* STATO CHE VERRÀ RIEMPITO DURANTE LA PRENOTAZIONE */
 const state = {
     fields: [],
@@ -287,6 +289,7 @@ function handleSlotClick(slotTime){
             ? generateTimeSlots().filter(s => slotToMinutes(s) >= slotToMinutes(oldSlots[0]) && slotToMinutes(s) <= slotToMinutes(oldSlots[1]))
             : [oldSlots[0]];
         sendWsAction("release_slots", slotsToRelease);
+        if(holdTimer) clearTimeout(holdTimer);
     }
 
     /*BLOCCO I NUOVI SLOT CHE HO SELEZIONATO*/
@@ -295,6 +298,14 @@ function handleSlotClick(slotTime){
             ? generateTimeSlots().filter(s => slotToMinutes(s) >= slotToMinutes(state.selectedSlots[0]) && slotToMinutes(s) <= slotToMinutes(state.selectedSlots[1]))
             : [state.selectedSlots[0]];
         sendWsAction("hold_slots", slotsToHold);
+
+        holdTimer = setTimeout(()=>{
+            alert("Time's up! Your slots have been deselected due to inactivity");
+            sendWsAction("release_slots", slotsToHold);
+            state.selectedSlots = [];
+            updateSlotHighlights();
+            calculateTotal();
+        }, 60000);
     }
 
     updateSlotHighlights();
@@ -308,33 +319,47 @@ async function renderSlots(resetHolds=true){
     hide(dom.alertSlotTaken);
 
     if(resetHolds) state.heldByOthers = {};
-
     state.selectedSlots = [];
     calculateTotal()
 
     try{
-        const res = await fetch(`${API_BASE}/bookings?field_id=${state.selectedFieldId}&date=${state.selectedDate}`);
+        const holdRes = await fetch(`${API_BASE}/bookings/holds?field_id=${state.selectedFieldId}&date=${state.selectedDate}`, { cache: 'no-store' });
+        const activeHolds = await holdRes.json();
+
+        Object.keys(activeHolds).forEach(slotTime => {
+            const key = `${state.selectedFieldId}:${state.selectedDate}:${slotTime}`;
+            state.heldByOthers[key] = activeHolds[slotTime];
+            setTimeout(() =>{
+                if(state.heldByOthers[key] === activeHolds[slotTime]){
+                    delete state.heldByOthers[key];
+                    updateSlotHighlights();
+                }
+            },60000);
+        });
+
+        const res = await fetch(`${API_BASE}/bookings?field_id=${state.selectedFieldId}&date=${state.selectedDate}`, { cache: 'no-store' });
         state.bookings = await res.json();
 
         dom.slotGrid.innerHTML = '';
         generateTimeSlots().forEach(slotTime => {
             const taken = isSlotTaken(slotTime, state.bookings);
-            const heldByOther = state.heldByOthers[`${state.selectedFieldId}:${state.selectedDate}:${slotTime}`];
+            const holdKey = `${state.selectedFieldId}:${state.selectedDate}:${slotTime}`;
+            const isHeld = !!state.heldByOthers[holdKey];
 
             const pill = document.createElement('button');
             pill.type = 'button';
 
             let className = 'slot-pill';
             if (taken) className += ' slot-pill--taken';
-            if (heldByOther) className += ' slot-pill--held';
-            pill.className = className;
+            else if (isHeld) className += ' slot-pill--held';
 
+            pill.className = className;
             pill.textContent = slotTime;
             pill.dataset.time = slotTime;
 
-            pill.disabled = taken || !!heldByOther;
-            pill.setAttribute('aria-label', `Slot ${slotTime}${taken ? ' - taken' : (heldByOther ? ' - selecting' : '')}`);
-            if (!taken && !heldByOther) {
+            pill.disabled = taken || !!isHeld;
+
+            if (!taken && !isHeld) {
                 pill.addEventListener('click', () => handleSlotClick(slotTime));
             }
             dom.slotGrid.appendChild(pill);
@@ -655,6 +680,7 @@ async function confirmBooking(){
         end_time: endISO,
         utility_ids: [...state.selectedUtilityIds]
     };
+    if(holdTimer) clearTimeout(holdTimer);
     setBtnState('loading');
 
     try{

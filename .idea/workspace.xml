@@ -4,9 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added symple CSS style for the held slots">
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed some errors, but the function is still not working">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/main.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field_node/static/frontend/css/booking.css" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/css/booking.css" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -45,7 +46,7 @@
     <urls />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="CurrentFile" />
+    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -143,15 +144,7 @@
       <workItem from="1776683714696" duration="11213000" />
       <workItem from="1776786087115" duration="9404000" />
       <workItem from="1776848197631" duration="5181000" />
-      <workItem from="1776957822381" duration="7337000" />
-    </task>
-    <task id="LOCAL-00039" summary="Fixed errors occurred while terminal testing">
-      <option name="closed" value="true" />
-      <created>1775901448871</created>
-      <option name="number" value="00039" />
-      <option name="presentableId" value="LOCAL-00039" />
-      <option name="project" value="LOCAL" />
-      <updated>1775901448871</updated>
+      <workItem from="1776957822381" duration="11151000" />
     </task>
     <task id="LOCAL-00040" summary="Fixed session() context manager and get_client() for recovery job">
       <option name="closed" value="true" />
@@ -537,14 +530,21 @@
       <option name="project" value="LOCAL" />
       <updated>1776964043084</updated>
     </task>
-    <option name="localTasksCounter" value="88" />
+    <task id="LOCAL-00088" summary="Fixed some errors, but the function is still not working">
+      <option name="closed" value="true" />
+      <created>1776969762343</created>
+      <option name="number" value="00088" />
+      <option name="presentableId" value="LOCAL-00088" />
+      <option name="project" value="LOCAL" />
+      <updated>1776969762343</updated>
+    </task>
+    <option name="localTasksCounter" value="89" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added CORS to handle console browser network error" />
     <MESSAGE value="Added css stylesheet for the sidebar of the frontend page" />
     <MESSAGE value="Reviewed old test file and corrected it" />
     <MESSAGE value="Created basic js functions to handle date and time in booking slots" />
@@ -569,7 +569,8 @@
     <MESSAGE value="Modified the availability endpoint with the possibility of holding a slot for a certain time" />
     <MESSAGE value="Added the handling of the slots logic in the js file" />
     <MESSAGE value="Added symple CSS style for the held slots" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added symple CSS style for the held slots" />
+    <MESSAGE value="Fixed some errors, but the function is still not working" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed some errors, but the function is still not working" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

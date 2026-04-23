@@ -253,13 +253,16 @@ async def ws_availability(websocket: WebSocket, redis: Redis = Depends(get_redis
             try:
                 payload = json.loads(text_data)
                 action = payload.get("action")
+                field_id = int(payload.get("field_id")) if payload.get("field_id") is not None else None
+                date = payload.get("date")
+                user_id = str(payload.get("user_id")) if payload.get("user_id") else None
+                slots = payload.get("slots", [])
+
+                if not all([field_id, date, user_id]) or not slots:
+                    continue
+
                 # SE L'UTENTE SELEZIONA UNO SLOT
                 if action == "hold_slots":
-                    field_id = payload.get("field_id")
-                    date = payload.get("date")
-                    slots = payload.get("slots", [])
-                    user_id = payload.get("user_id")
-
                     # SALVO CON UN TTL DI 60 SECONDO
                     for slot in slots:
                         hold_key = f"hold:{field_id}:{date}:{slot}"
@@ -276,11 +279,6 @@ async def ws_availability(websocket: WebSocket, redis: Redis = Depends(get_redis
 
                 # QUESTO SAREBBE IL CASO IN CUI L'UTENTE DESELEZIONA O CONFERMA UNO SLOT
                 elif action == "release_slots":
-                    field_id = payload.get("field_id")
-                    date = payload.get("date")
-                    slots = payload.get("slots", [])
-                    user_id = payload.get("user_id")
-
                     # INVECE CHE SALVARE CANCELLO
                     for slot in slots:
                         hold_key = f"hold:{field_id}:{date}:{slot}"
@@ -295,10 +293,8 @@ async def ws_availability(websocket: WebSocket, redis: Redis = Depends(get_redis
                         "user_id": user_id
                     }
                     await redis.publish(AVAILABILITY_CHANNEL, json.dumps(release_event))
-            except json.JSONDecodeError:
-                logger.error("[WS] Invalid JSON Received!")
-            except Exception as e:
-                logger.error(f"[WS] Error processing message: {e}")
+            except (json.JSONDecodeError, ValueError, TypeError) as e:
+                logger.error("[WS] Bad Payload: {e}")
     except WebSocketDisconnect:
         logger.info("[WS] client disconnected!")
     finally:

@@ -232,10 +232,6 @@ function updateSlotHighlights(){
 
     dom.slotGrid.querySelectorAll('.slot-pill:not(.slot-pill--taken)').forEach( pill =>{
         const m = slotToMinutes(pill.dataset.time);
-        /* CONTROLLO SE LO SLOT E' BLOCCATO DA ALTRI*/
-        const isHeld = state.heldByOthers[pill.dataset.time];
-        pill.classList.toggle('slot-pill--held', !!isHeld);
-        pill.disabled = !!isHeld;
 
         let selected = false;
         if (state.selectedSlots.length === 1){
@@ -243,7 +239,13 @@ function updateSlotHighlights(){
         } else if (state.selectedSlots.length === 2){
             selected = m >= startMin && m <= endMin;
         }
+
+        /* CONTROLLO SE LO SLOT È BLOCCATO DA ALTRI*/
+        const isHeld = state.heldByOthers[`${state.selectedFieldId}:${state.selectedDate}:${pill.dataset.time}`];
         pill.classList.toggle('slot-pill--selected', selected);
+        pill.classList.toggle('slot-pill--held',  !!isHeld && !selected);
+        pill.disabled = !!isHeld && !selected;
+
         pill.setAttribute('aria-pressed', selected ? 'true' : 'false');
     });
 }
@@ -300,24 +302,24 @@ function handleSlotClick(slotTime){
 }
 
 /* RENDERING DEGLI SLOTS NELLA PAGINA*/
-async function renderSlots(){
+async function renderSlots(resetHolds=true){
     show(dom.slotSkeleton);
     hide(dom.slotGrid);
     hide(dom.alertSlotTaken);
-    state.heldByOthers = {};
-    show(dom.slotSkeleton);
+
+    if(resetHolds) state.heldByOthers = {};
+
     state.selectedSlots = [];
     calculateTotal()
 
     try{
         const res = await fetch(`${API_BASE}/bookings?field_id=${state.selectedFieldId}&date=${state.selectedDate}`);
-        if(!res.ok) throw new Error(`HTTP ${res.status}`);
         state.bookings = await res.json();
 
         dom.slotGrid.innerHTML = '';
         generateTimeSlots().forEach(slotTime => {
             const taken = isSlotTaken(slotTime, state.bookings);
-            const heldByOther = state.heldByOthers[slotTime];
+            const heldByOther = state.heldByOthers[`${state.selectedFieldId}:${state.selectedDate}:${slotTime}`];
 
             const pill = document.createElement('button');
             pill.type = 'button';
@@ -441,7 +443,7 @@ function addFeedEvent(event){
                 </button>
             ` : ''}
         </div>`;
-    
+
     dom.feedList.insertBefore(li, dom.feedList.firstChild);
 
     /* ANIMAZIONE DI ENTRATA NEL FEED*/
@@ -489,8 +491,8 @@ function handleWsEvent(event){
             }
         }
         if(event.event_type === 'booking_cancelled' || event.event_type === 'booking_confirmed') {
-            if (state.selectedFieldId && state.selectedDate && event.field_id === state.selectedFieldId && event.start_time?.substring(0, 10) === state.selectedDate) {
-                renderSlots();
+            if (state.selectedFieldId && state.selectedDate && Number(event.field_id) === state.selectedFieldId && event.start_time?.substring(0, 10) === state.selectedDate) {
+                renderSlots(false);
             }
         }
     }
@@ -498,15 +500,21 @@ function handleWsEvent(event){
     /* LOGICA DI PRENOTAZIONE TEMPORANEA*/
     if(event.event_type === 'slots_held') {
         /* SE NON SONO IO AD AVERE OCCUPATO*/
-        if(event.user_id !== state.userId && event.field_id === state.selectedFieldId && event.date === state.selectedDate) {
-            event.slots.forEach(slot => state.heldByOthers[slot] = event.user_id);
+        if(event.user_id !== state.userId && Number(event.field_id) === state.selectedFieldId && event.date === state.selectedDate) {
+            event.slots.forEach(slot => {
+                const key = `${event.field_id}:${event.date}:${slot}`;
+                state.heldByOthers[key] = event.user_id
+            });
             updateSlotHighlights();
         }
     }
 
     if(event.event_type === 'slots_released') {
-        if(event.field_id === state.selectedFieldId && event.date === state.selectedDate) {
-            event.slots.forEach(slot => delete state.heldByOthers[slot]);
+        if(Number(event.field_id) === state.selectedFieldId && event.date === state.selectedDate) {
+            event.slots.forEach(slot => {
+                const key = `${event.field_id}:${event.date}:${slot}`;
+                delete state.heldByOthers[key]
+            });
             updateSlotHighlights();
         }
     }

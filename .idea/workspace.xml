@@ -4,12 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed Error: now the X vanishes after the cancellation and not everyone can cancel someone's booking">
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added symple CSS style for the held slots">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field_node/app/repositories/field_booking_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/repositories/field_booking_repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field_node/static/frontend/css/sidebar.css" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/css/sidebar.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/field_node/app/main.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/main.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_fault_tolerance.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_fault_tolerance.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -144,39 +142,8 @@
       <workItem from="1776669041604" duration="2876000" />
       <workItem from="1776683714696" duration="11213000" />
       <workItem from="1776786087115" duration="9404000" />
-      <workItem from="1776848197631" duration="4414000" />
-    </task>
-    <task id="LOCAL-00035" summary="Fixed errors occurred during terminal tests">
-      <option name="closed" value="true" />
-      <created>1775844746615</created>
-      <option name="number" value="00035" />
-      <option name="presentableId" value="LOCAL-00035" />
-      <option name="project" value="LOCAL" />
-      <updated>1775844746615</updated>
-    </task>
-    <task id="LOCAL-00036" summary="Added recovery logic">
-      <option name="closed" value="true" />
-      <created>1775898448707</created>
-      <option name="number" value="00036" />
-      <option name="presentableId" value="LOCAL-00036" />
-      <option name="project" value="LOCAL" />
-      <updated>1775898448708</updated>
-    </task>
-    <task id="LOCAL-00037" summary="Added to main the recovery logic + new recovery endpoint">
-      <option name="closed" value="true" />
-      <created>1775899022412</created>
-      <option name="number" value="00037" />
-      <option name="presentableId" value="LOCAL-00037" />
-      <option name="project" value="LOCAL" />
-      <updated>1775899022412</updated>
-    </task>
-    <task id="LOCAL-00038" summary="Added a DB Session for the recovery job">
-      <option name="closed" value="true" />
-      <created>1775900412199</created>
-      <option name="number" value="00038" />
-      <option name="presentableId" value="LOCAL-00038" />
-      <option name="project" value="LOCAL" />
-      <updated>1775900412199</updated>
+      <workItem from="1776848197631" duration="5181000" />
+      <workItem from="1776957822381" duration="7337000" />
     </task>
     <task id="LOCAL-00039" summary="Fixed errors occurred while terminal testing">
       <option name="closed" value="true" />
@@ -538,17 +505,45 @@
       <option name="project" value="LOCAL" />
       <updated>1776849538091</updated>
     </task>
-    <option name="localTasksCounter" value="84" />
+    <task id="LOCAL-00084" summary="Fixed Error: now the Feed shows all the operations done even after the refresh of the page">
+      <option name="closed" value="true" />
+      <created>1776852692244</created>
+      <option name="number" value="00084" />
+      <option name="presentableId" value="LOCAL-00084" />
+      <option name="project" value="LOCAL" />
+      <updated>1776852692244</updated>
+    </task>
+    <task id="LOCAL-00085" summary="Modified the availability endpoint with the possibility of holding a slot for a certain time">
+      <option name="closed" value="true" />
+      <created>1776959167409</created>
+      <option name="number" value="00085" />
+      <option name="presentableId" value="LOCAL-00085" />
+      <option name="project" value="LOCAL" />
+      <updated>1776959167410</updated>
+    </task>
+    <task id="LOCAL-00086" summary="Added the handling of the slots logic in the js file">
+      <option name="closed" value="true" />
+      <created>1776962143346</created>
+      <option name="number" value="00086" />
+      <option name="presentableId" value="LOCAL-00086" />
+      <option name="project" value="LOCAL" />
+      <updated>1776962143346</updated>
+    </task>
+    <task id="LOCAL-00087" summary="Added symple CSS style for the held slots">
+      <option name="closed" value="true" />
+      <created>1776964043084</created>
+      <option name="number" value="00087" />
+      <option name="presentableId" value="LOCAL-00087" />
+      <option name="project" value="LOCAL" />
+      <updated>1776964043084</updated>
+    </task>
+    <option name="localTasksCounter" value="88" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Removed unused &quot;style.css&quot; and added &quot;booking.css&quot; for the booking section in the frontend page" />
-    <MESSAGE value="Added Total + Confirm section to the frontend page" />
-    <MESSAGE value="Added CSS stylesheet for the total + confirm section in the frontend page" />
-    <MESSAGE value="Added sidebar for live feed events in the frontend page and liked the next CSS stylesheet" />
     <MESSAGE value="Added CORS to handle console browser network error" />
     <MESSAGE value="Added css stylesheet for the sidebar of the frontend page" />
     <MESSAGE value="Reviewed old test file and corrected it" />
@@ -570,7 +565,11 @@
     <MESSAGE value="Modified the utilities: now I have hourly and not hourly utilities" />
     <MESSAGE value="Added possibility to cancel a booking" />
     <MESSAGE value="Fixed Error: now the X vanishes after the cancellation and not everyone can cancel someone's booking" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed Error: now the X vanishes after the cancellation and not everyone can cancel someone's booking" />
+    <MESSAGE value="Fixed Error: now the Feed shows all the operations done even after the refresh of the page" />
+    <MESSAGE value="Modified the availability endpoint with the possibility of holding a slot for a certain time" />
+    <MESSAGE value="Added the handling of the slots logic in the js file" />
+    <MESSAGE value="Added symple CSS style for the held slots" />
+    <option name="LAST_COMMIT_MESSAGE" value="Added symple CSS style for the held slots" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

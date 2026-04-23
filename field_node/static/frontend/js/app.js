@@ -22,6 +22,7 @@ const state = {
     selectedUtilityIds: [],
     userId: '',
     bookings: [],
+    heldByOthers: {},
 }
 
 /* RIFERIMENTI DEGLI ELEMENTI DEL DOM */
@@ -231,6 +232,11 @@ function updateSlotHighlights(){
 
     dom.slotGrid.querySelectorAll('.slot-pill:not(.slot-pill--taken)').forEach( pill =>{
         const m = slotToMinutes(pill.dataset.time);
+        /* CONTROLLO SE LO SLOT E' BLOCCATO DA ALTRI*/
+        const isHeld = state.heldByOthers[pill.dataset.time];
+        pill.classList.toggle('slot-pill--held', !!isHeld);
+        pill.disabled = !!isHeld;
+
         let selected = false;
         if (state.selectedSlots.length === 1){
             selected = m === startMin;
@@ -244,6 +250,16 @@ function updateSlotHighlights(){
 
 /* SELEZIONE DELLO SLOT */
 function handleSlotClick(slotTime){
+    /* FONDAMENTALE CHE L UTENTE SIA AUTENTICATO*/
+    if(!state.userId){
+        if(!validateUserId()){
+            dom.userId.focus();
+            return
+        }
+    }
+    /* MI TENGO UNA COPIA DEI VECCHI SLOTS*/
+    const oldSlots = [...state.selectedSlots];
+
     if(state.selectedSlots.length === 0 || state.selectedSlots.length === 2){
         state.selectedSlots = [slotTime];
     } else {
@@ -262,6 +278,23 @@ function handleSlotClick(slotTime){
             }
         }
     }
+
+    /* LIBERO I VECCHI SLOTS*/
+    if(oldSlots.length > 0){
+        const slotsToRelease = oldSlots.length === 2
+            ? generateTimeSlots().filter(s => slotToMinutes(s) >= slotToMinutes(oldSlots[0]) && slotToMinutes(s) <= slotToMinutes(oldSlots[1]))
+            : [oldSlots[0]];
+        sendWsAction("release_slots", slotsToRelease);
+    }
+
+    /*BLOCCO I NUOVI SLOT CHE HO SELEZIONATO*/
+    if(state.selectedSlots.length > 0){
+        const slotsToHold = state.selectedSlots.length === 2
+            ? generateTimeSlots().filter(s => slotToMinutes(s) >= slotToMinutes(state.selectedSlots[0]) && slotToMinutes(s) <= slotToMinutes(state.selectedSlots[1]))
+            : [state.selectedSlots[0]];
+        sendWsAction("hold_slots", slotsToHold);
+    }
+
     updateSlotHighlights();
     calculateTotal();
 }
@@ -271,6 +304,8 @@ async function renderSlots(){
     show(dom.slotSkeleton);
     hide(dom.slotGrid);
     hide(dom.alertSlotTaken);
+    state.heldByOthers = {};
+    show(dom.slotSkeleton);
     state.selectedSlots = [];
     calculateTotal()
 
@@ -282,14 +317,22 @@ async function renderSlots(){
         dom.slotGrid.innerHTML = '';
         generateTimeSlots().forEach(slotTime => {
             const taken = isSlotTaken(slotTime, state.bookings);
+            const heldByOther = state.heldByOthers[slotTime];
+
             const pill = document.createElement('button');
             pill.type = 'button';
-            pill.className = taken ? 'slot-pill slot-pill--taken' : 'slot-pill';
+
+            let className = 'slot-pill';
+            if (taken) className += ' slot-pill--taken';
+            if (heldByOther) className += ' slot-pill--held';
+            pill.className = className;
+
             pill.textContent = slotTime;
             pill.dataset.time = slotTime;
-            pill.disabled = taken;
-            pill.setAttribute('aria-label', `Slot ${slotTime}${taken ? ' \u2014 occupato' : ''}`);
-            if (!taken) {
+
+            pill.disabled = taken || !!heldByOther;
+            pill.setAttribute('aria-label', `Slot ${slotTime}${taken ? ' - taken' : (heldByOther ? ' - selecting' : '')}`);
+            if (!taken && !heldByOther) {
                 pill.addEventListener('click', () => handleSlotClick(slotTime));
             }
             dom.slotGrid.appendChild(pill);
@@ -436,17 +479,35 @@ dom.sportSelect.addEventListener('change', () => {
 /* GESTIONE DELLE WEBSOCKET */
 
 function handleWsEvent(event){
-    addFeedEvent(event);
-    if(event.event_type === 'booking_cancelled') {
-        const selector = `li[data-booking-id="${event.field_booking_id}"] .btn-delete`;
-        const oldConfirmedBtn = document.querySelector(selector);
-        if (oldConfirmedBtn) {
-            oldConfirmedBtn.remove();
+    if(event.event_type.startsWith('booking_')){
+        addFeedEvent(event);
+        if(event.event_type === 'booking_cancelled') {
+            const selector = `li[data-booking-id="${event.field_booking_id}"] .btn-delete`;
+            const oldConfirmedBtn = document.querySelector(selector);
+            if (oldConfirmedBtn) {
+                oldConfirmedBtn.remove();
+            }
+        }
+        if(event.event_type === 'booking_cancelled' || event.event_type === 'booking_confirmed') {
+            if (state.selectedFieldId && state.selectedDate && event.field_id === state.selectedFieldId && event.start_time?.substring(0, 10) === state.selectedDate) {
+                renderSlots();
+            }
         }
     }
-    if(event.event_type === 'booking_cancelled' || event.event_type === 'booking_confirmed') {
-        if (state.selectedFieldId && state.selectedDate && event.field_id === state.selectedFieldId && event.start_time?.substring(0, 10) === state.selectedDate) {
-            renderSlots();
+
+    /* LOGICA DI PRENOTAZIONE TEMPORANEA*/
+    if(event.event_type === 'slots_held') {
+        /* SE NON SONO IO AD AVERE OCCUPATO*/
+        if(event.user_id !== state.userId && event.field_id === state.selectedFieldId && event.date === state.selectedDate) {
+            event.slots.forEach(slot => state.heldByOthers[slot] = event.user_id);
+            updateSlotHighlights();
+        }
+    }
+
+    if(event.event_type === 'slots_released') {
+        if(event.field_id === state.selectedFieldId && event.date === state.selectedDate) {
+            event.slots.forEach(slot => delete state.heldByOthers[slot]);
+            updateSlotHighlights();
         }
     }
 }
@@ -460,6 +521,25 @@ function scheduleWsReconnect(){
     wsRetry++;
     console.info(`[WS] Reconnect in ${delay}ms (attempt ${wsRetry}/${WS_MAX_RETRIES})`);
     setTimeout(connectWebSocket, delay);
+}
+
+/* INVIA UN AZIONE VIA WEBSOCKET*/
+function sendWsAction(action, slots){
+    if(!state.userId){
+        console.warn("[WS] Action Blocked: No User ID Found!");
+        return;
+    }
+
+    if(ws && ws.readyState === WebSocket.OPEN){
+        const payload = {
+            action: action,
+            field_id: state.selectedFieldId,
+            date: state.selectedDate,
+            slots: slots,
+            user_id: state.userId
+        };
+        ws.send(JSON.stringify(payload));
+    }
 }
 
 let ws = null;

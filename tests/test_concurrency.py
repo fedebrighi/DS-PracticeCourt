@@ -1,14 +1,26 @@
 import asyncio
+import time
+from datetime import tzinfo, timedelta
+
 import httpx
+import pytest
+from django.db.models.functions import datetime
 
 FIELD_NODE_URL = "http://localhost:8001"
+UTILITY_NODE_URL = "http://localhost:8002"
 N_CONCURRENT = 10  # NUMERO DI  RICHIESTE CHE MANDERO' COME TEST
+_BASE_TS = int(time.time())
 
-async def create_test_field(client: httpx.AsyncClient) -> int:   # CREO UN CAMPO DI TEST
+# GENERA UNO SLOT FUTURO DINAMICO
+def _future_slot(hour: int = 10):
+    base = datetime(2035, 1, 1, hour, 0, 0, tzinfo=time.timezone.utc)
+    return base.isoformat(), (base + timedelta(hours = 1)).isoformat()
+
+async def create_test_field(client: httpx.AsyncClient, suffix: str = "") -> int:   # CREO UN CAMPO DI TEST
     response = await client.post(
         f"{FIELD_NODE_URL}/fields",
         json={
-            "name": "Test Concurrency Field",
+            "name": f"Test Concurrency Field {_BASE_TS}{suffix}",
             "sport_type": "football",
             "location": "Zone F",
             "price_per_hour": 20.0,
@@ -20,12 +32,12 @@ async def create_test_field(client: httpx.AsyncClient) -> int:   # CREO UN CAMPO
     return field_id
 
 # PROVO A FARE LA PRENOTAZIONE AL CAMPO CREATO
-async def try_book(client: httpx.AsyncClient, field_id: int, user_id: str) -> dict:
+async def try_book_simple(client: httpx.AsyncClient, field_id: int, user_id: str, start: str, end: str) -> dict:
     payload = {
         "field_id": field_id,
         "user_id": user_id,
-        "start_time": "2026-03-28T10:00:00",
-        "end_time": "2026-03-28T11:00:00",
+        "start_time": start,
+        "end_time": end,
     }
     response = await client.post(
         f"{FIELD_NODE_URL}/bookings",
@@ -35,45 +47,92 @@ async def try_book(client: httpx.AsyncClient, field_id: int, user_id: str) -> di
     return {
         "user_id": user_id,
         "status_code": response.status_code,
-        "body": response.json(),
     }
 
-async def run_test():
-    print(f"Launching {N_CONCURRENT} concurrent requests on the same slot...\n") # LANCIO LE 10 RICHIESTE
+async def _try_book_2pc(client: httpx.AsyncClient, field_id: int, user_id: str, utility_ids: list, start: str, end: str,)-> dict:
+    resp = await client.post(f"{FIELD_NODE_URL}/bookings/2pc", json={
+        "field_id": field_id,
+        "user_id": user_id,
+        "start_time": start,
+        "end_time": end,
+        "utility_ids": utility_ids,
+    }, timeout=10.)
+    return {"user_id": user_id, "status_code": resp.status_code}
 
-    async with httpx.AsyncClient() as client:
-        field_id = await create_test_field(client)
-        tasks = [try_book(client, field_id, f"user_{i}") for i in range(N_CONCURRENT)]
-        results = await asyncio.gather(*tasks)
-
-    # CLASSIFICO I RISULTATI PER STATUS CODE
+# VERIFICA CHE CI SIA 1 VINCITORE E TUTTI GLI ALTRI CONFLITTI
+def _assert_one_winner(results: list, label: str):
     successes = [r for r in results if r["status_code"] == 201]
     conflicts = [r for r in results if r["status_code"] == 409]
-    errors = [r for r in results if r["status_code"] not in (201,409)]
+    errors = [r for r in results if r["status_code"] not in (201, 409)]
 
-    print(f"Bookings created (201): {len(successes)}")
-    print(f"Conflicts occurred (409): {len(conflicts)}")
-    print(f"Unexpected errors: {len(errors)}")
+    assert len(errors) == 0, (
+        f"[{label}] {len(errors)} responses with unexpected status: "
+        f"{[r['status_code'] for r in errors]}"
+    )
 
-    if errors:  # GESTIONE ERRORI
-        print("\n Unexpected errors details:")
-        for e in errors:
-            print(f"    -> {e['user_id']} | {e['status_code']} | {e['body']} ")
+    assert len(successes) == 1, (
+        f"[{label}] Expected 1 winning booking, got {len(successes)}."
+        "Distributed Lock Not Working!"
+    )
 
-    assert len(errors) == 0, \
-        f"FAIL: {len(errors)} responses with unexpected status code."
+    assert len(conflicts) == N_CONCURRENT - 1, (
+        f"[{label}] Expected {N_CONCURRENT - 1} conflicts, got {len(conflicts)}."
+    )
 
-    assert len(successes) == 1, \
-        f"FAIL: expected 1 booking, obtained {len(successes)}. Distributed lock not working!"
+@pytest.mark.asyncio
+# N UTENTI PRENOTANO LO STESSO SLOT, SOLO 1 DEVE VINCERE
+async def test_concurrent_booking_simple():
+    start, end = _future_slot(hour=10)
+    async with httpx.AsyncClient() as client:
+        field_id = await create_test_field(client, "_simple")
+        tasks = [
+            try_book_simple(client, field_id, f"user_simple_{i}", start, end)
+            for i in range(N_CONCURRENT)
+        ]
+        results = await asyncio.gather(*tasks)
+    _assert_one_winner(results, "/bookings simple")
 
-    assert len(conflicts) == N_CONCURRENT-1, \
-        f"FAIL: expected {N_CONCURRENT-1} conflicts, obtained {len(conflicts)}."
+@pytest.mark.asyncio
+# N UTENTI PRENOTANO LO STESSO 2PC SLOT SENZA UTILITY, SOLO 1 DEVE VINCERE
+async def test_concurrent_booking_2pc_no_utility():
+    start, end = _future_slot(hour=12)
+    async with httpx.AsyncClient() as client:
+        field_id = await create_test_field(client, "_2pc")
+        tasks = [
+            _try_book_2pc(client, field_id, f"user_2pc_{i}", [], start, end)
+            for i in range(N_CONCURRENT)
+        ]
+        results = await asyncio.gather(*tasks)
+    _assert_one_winner(results, "/bookings/2pc no utility")
 
-    winner = successes[0]    # PRENDO CHI E' RIUSCITO A PRENOTARE IL CAMPO E I SUOI DATI
-    print(f"WINNER: {winner['user_id']} successfully booked a field")
-    print(f"    Booking ID: {winner['body'].get('id')}")
-    print(f"    Status: {winner['body'].get('status')}")
-    print("TEST PASSED")
+@pytest.mark.asyncio
+# N UTENTI PRENOTANO LO STESSO 2PC SLOT CON UTILITY, SOLO 1 DEVE VINCERE
+async def test_concurrent_booking_2pc_with_utility():
+    start, end = _future_slot(hour=14)
+    async with httpx.AsyncClient() as client:
+        field_id = await create_test_field(client, "_2pc_util")
 
-if __name__ == "__main__":
-    asyncio.run(run_test())
+        util_resp = await client.post(
+            f"{UTILITY_NODE_URL}/utilities",
+            json={
+                "name": f"Lights {_BASE_TS}",
+                "utility_type": "lighting",
+                "price_per_hour": 5.0,
+                "is_active": True
+            },
+        )
+        assert util_resp.status_code == 201, f"Cannot create utility: {util_resp.text}"
+        utility_id = util_resp.json()["id"]
+
+        tasks = [
+            _try_book_2pc(client, field_id, f"user_2pc_util{i}", [utility_id], start, end)
+            for i in range(N_CONCURRENT)
+        ]
+        results = await asyncio.gather(*tasks)
+    _assert_one_winner(results, "/bookings/2pc with utility")
+
+    # VERIFICO INFINE CHE L UTILITY BOOKING DEL VINCITORE DEVE ESSERE CONFIRMED
+    async with httpx.AsyncClient() as client:
+        all_bookings = (await client.get(f"{FIELD_NODE_URL}/bookings")).json()
+        winner_booking = next((b for b in all_bookings if b["field_id"] == field_id and b["status"] == "confirmed"), None)
+        assert winner_booking is not None, "No Confirmed Booking found after the race"

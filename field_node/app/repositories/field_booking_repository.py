@@ -45,6 +45,7 @@ async def check_availability(
                 FieldBooking.end_time > start_time,
             )
         )
+        .with_for_update()
     )
     return result.scalar_one_or_none() is None
 
@@ -57,23 +58,23 @@ async def create( # CREAZIONE DI UNA NUOVA PRENOTAZIONE
         end_time: datetime,
 ) -> FieldBooking | None:
     lock = DistributedLock(redis)
-    lock_key = f"field:{field_id}"
+    lock_key = f"field:{field_id}:{start_time.isoformat()}"
     token = await lock.acquire(lock_key, _LOCK_TTL_MS) # ACQUISISCO IL LOCK
     if token is None:
         return None
     try:
-        available = await check_availability(db, field_id, start_time, end_time) # VERIFICO DISPONIBILITA
-        if not available:
-            return None
-        # INSERISCO
-        booking = FieldBooking(
-            field_id = field_id,
-            user_id = user_id,
-            start_time = start_time,
-            end_time = end_time,
-        )
-        db.add(booking)
-        await db.commit()
+        async with db.begin():
+            available = await check_availability(db, field_id, start_time, end_time) # VERIFICO DISPONIBILITA
+            if not available:
+                return None
+            # INSERISCO
+            booking = FieldBooking(
+                field_id = field_id,
+                user_id = user_id,
+                start_time = start_time,
+                end_time = end_time,
+            )
+            db.add(booking)
         await db.refresh(booking)
         return booking  # RITORNA L OGGETTO AGGIORNATO DAL DB
     finally:

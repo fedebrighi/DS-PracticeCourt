@@ -1,19 +1,18 @@
 import asyncio
 import time
-from datetime import tzinfo, timedelta
+from datetime import timedelta, datetime, timezone
 
 import httpx
 import pytest
-from django.db.models.functions import datetime
 
 FIELD_NODE_URL = "http://localhost:8001"
 UTILITY_NODE_URL = "http://localhost:8002"
-N_CONCURRENT = 10  # NUMERO DI  RICHIESTE CHE MANDERO' COME TEST
+N_CONCURRENT = 10  # NUMERO DI RICHIESTE CHE MANDERO' COME TEST
 _BASE_TS = int(time.time())
 
 # GENERA UNO SLOT FUTURO DINAMICO
 def _future_slot(hour: int = 10):
-    base = datetime(2035, 1, 1, hour, 0, 0, tzinfo=time.timezone.utc)
+    base = datetime(2035, 1, 1, hour, 0, 0, tzinfo=timezone.utc)
     return base.isoformat(), (base + timedelta(hours = 1)).isoformat()
 
 async def create_test_field(client: httpx.AsyncClient, suffix: str = "") -> int:   # CREO UN CAMPO DI TEST

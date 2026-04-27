@@ -383,14 +383,33 @@ async function renderSlots(resetHolds=true){
     }
 }
 
+/*RILASCIA GLI HOLD ATTIVI PRIMA DI CAMBIARE CAMPO O DATA*/
+function releaseActiveHolds(){
+    if(state.selectedSlots.length === 0) return;
+
+    const slotsToRelease = state.selectedSlots.length === 2 ? generateTimeSlots().filter(s =>
+        slotToMinutes(s) >= slotToMinutes(state.selectedSlots[0]) && slotToMinutes(s) <= slotToMinutes(state.selectedSlots[1])) : [state.selectedSlots[0]];
+    sendWsAction("release_slots", slotsToRelease);
+    if(holdTimer){
+        clearTimeout(holdTimer);
+        holdTimer = null;
+    }
+}
+
+window.addEventListener('beforeunload', ()=>{
+    releaseActiveHolds();
+})
+
+/* LISTENER SPORT CON ANTEPRIMA GRANDE */
 dom.sportSelect.addEventListener('change', () =>{
+    releaseActiveHolds();
     const selectedFieldId = parseInt(dom.sportSelect.value);
     const field = state.fields.find(f => f.id === selectedFieldId);
     const previewImg = document.getElementById('sport-preview-img');
     const previewContainer = document.getElementById('sport-preview');
 
     if (field && field.sport_type) {
-        previewImg.src = `imgs/${field.sport_type}.png`; // es: imgs/football.png
+        previewImg.src = `../imgs/${field.sport_type}.png`;
         previewContainer.removeAttribute('hidden');
     } else {
         previewContainer.setAttribute('hidden', '');
@@ -402,6 +421,7 @@ dom.sportSelect.addEventListener('change', () =>{
 });
 
 dom.dateInput.addEventListener('change', () =>{
+    releaseActiveHolds();
     state.selectedDate = dom.dateInput.value || null;
     state.selectedSlots = [];
     calculateTotal();
@@ -490,26 +510,6 @@ function addFeedEvent(event){
         dom.feedList.removeChild(dom.feedList.lastChild);
     }
 }
-
-/* LISTENER SPORT CON ANTEPRIMA GRANDE */
-dom.sportSelect.addEventListener('change', () => {
-    const selectedFieldId = parseInt(dom.sportSelect.value);
-    const field = state.fields.find(f => f.id === selectedFieldId);
-    const previewImg = document.getElementById('sport-preview-img');
-    const previewContainer = document.getElementById('sport-preview');
-
-    if (field && field.sport_type) {
-        previewImg.src = `../imgs/${field.sport_type}.png`;
-        show(previewContainer);
-    } else {
-        hide(previewContainer);
-    }
-
-    state.selectedFieldId = selectedFieldId || null;
-    state.selectedSlots = [];
-    calculateTotal();
-    if(state.selectedFieldId && state.selectedDate) renderSlots();
-});
 
 /* GESTIONE DELLE WEBSOCKET */
 

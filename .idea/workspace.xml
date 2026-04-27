@@ -4,11 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Restructured test_concurrency.py as a pytest">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources/59a6b85b-24c5-47e2-8a00-344abcb47fb4.xml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/sqldialects.xml" beforeDir="false" />
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed problems about slot handling">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" afterDir="false" />
     </list>
@@ -37,12 +33,12 @@
     &quot;assignee&quot;: &quot;fedebrighi&quot;
   }
 }</component>
-  <component name="GithubPullRequestsUISettings">{
-  &quot;selectedUrlAndAccountId&quot;: {
-    &quot;url&quot;: &quot;https://github.com/fedebrighi/DS-PracticeCourt.git&quot;,
-    &quot;accountId&quot;: &quot;4ad6c39a-c68e-4abf-98d3-6e719ff1baab&quot;
+  <component name="GithubPullRequestsUISettings"><![CDATA[{
+  "selectedUrlAndAccountId": {
+    "url": "https://github.com/fedebrighi/DS-PracticeCourt.git",
+    "accountId": "a338b70f-9375-4497-9b68-2867e5a1493c"
   }
-}</component>
+}]]></component>
   <component name="McpProjectServerCommands">
     <commands />
     <urls />
@@ -147,15 +143,7 @@
       <workItem from="1776848197631" duration="5181000" />
       <workItem from="1776957822381" duration="11270000" />
       <workItem from="1777213274144" duration="4718000" />
-      <workItem from="1777288569652" duration="1678000" />
-    </task>
-    <task id="LOCAL-00042" summary="Modified pyproject.toml adding asyncio-mode = &quot;auto&quot; to fix test errors">
-      <option name="closed" value="true" />
-      <created>1775936400422</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1775936400422</updated>
+      <workItem from="1777288569652" duration="4050000" />
     </task>
     <task id="LOCAL-00043" summary="Modified this files to fix errors occurred while testing">
       <option name="closed" value="true" />
@@ -541,14 +529,21 @@
       <option name="project" value="LOCAL" />
       <updated>1777216665646</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="Fixed problems about slot handling">
+      <option name="closed" value="true" />
+      <created>1777290423436</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1777290423436</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Created basic js functions to handle date and time in booking slots" />
     <MESSAGE value="Added other function with loading of fields + utilities" />
     <MESSAGE value="Added other function focussing on slots" />
     <MESSAGE value="Added other function focussing on feed and websocket" />
@@ -573,7 +568,8 @@
     <MESSAGE value="Fixed some errors, but the function is still not working" />
     <MESSAGE value="Finally fixed the problem of the holding bookings" />
     <MESSAGE value="Restructured test_concurrency.py as a pytest" />
-    <option name="LAST_COMMIT_MESSAGE" value="Restructured test_concurrency.py as a pytest" />
+    <MESSAGE value="Fixed problems about slot handling" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed problems about slot handling" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

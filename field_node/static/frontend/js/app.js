@@ -244,9 +244,16 @@ function updateSlotHighlights(){
 
         /* CONTROLLO SE LO SLOT È BLOCCATO DA ALTRI*/
         const isHeld = state.heldByOthers[`${state.selectedFieldId}:${state.selectedDate}:${pill.dataset.time}`];
+        const wasHeld = pill.classList.contains('slot-pill--held');
+
         pill.classList.toggle('slot-pill--selected', selected);
         pill.classList.toggle('slot-pill--held',  !!isHeld && !selected);
         pill.disabled = !!isHeld && !selected;
+
+        if(wasHeld && !isHeld && !pill.dataset.listenerAttached){
+            pill.addEventListener('click', ()=> handleSlotClick(pill.dataset.time));
+            pill.dataset.listenerAttached = true;
+        }
 
         pill.setAttribute('aria-pressed', selected ? 'true' : 'false');
     });
@@ -361,6 +368,7 @@ async function renderSlots(resetHolds=true){
 
             if (!taken && !isHeld) {
                 pill.addEventListener('click', () => handleSlotClick(slotTime));
+                pill.dataset.listenerAttached = true;
             }
             dom.slotGrid.appendChild(pill);
         });
@@ -694,6 +702,10 @@ async function confirmBooking(){
         const data = await res.json();
 
         if(data.status === 'confirmed'){
+            const slotsToRelease = generateTimeSlots().filter( s=>
+                slotToMinutes(s) >= slotToMinutes(startSlot) && slotToMinutes(s) <= slotToMinutes(endSlot)
+            );
+            sendWsAction("release_slots", slotsToRelease);
             setBtnState('success');
 
             setTimeout(()=>{

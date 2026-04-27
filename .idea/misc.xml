@@ -3,5 +3,5 @@
   <component name="Black">
     <option name="sdkName" value="Python 3.12 (DS-PracticeCourt) (2)" />
   </component>
-  <component name="ProjectRootManager" version="2" languageLevel="JDK_26" project-jdk-name="Poetry (DS-PracticeCourt) (3)" project-jdk-type="Python SDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_24" project-jdk-name="Poetry (DS-PracticeCourt) (3)" project-jdk-type="Python SDK" />
 </project>

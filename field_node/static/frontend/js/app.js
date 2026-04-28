@@ -525,7 +525,8 @@ function handleWsEvent(event){
         }
         if(event.event_type === 'booking_cancelled' || event.event_type === 'booking_confirmed') {
             if (state.selectedFieldId && state.selectedDate && Number(event.field_id) === state.selectedFieldId && event.start_time?.substring(0, 10) === state.selectedDate) {
-                renderSlots(false);
+                const reset = event.event_type === 'booking_cancelled';
+                renderSlots(reset);
             }
         }
     }

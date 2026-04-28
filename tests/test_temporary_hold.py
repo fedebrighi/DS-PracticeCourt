@@ -7,14 +7,14 @@ import pytest_asyncio
 import websockets
 from redis.asyncio import Redis as AsyncRedis
 
-FIELD_URL = "https://localhost:8001"
+FIELD_URL = "http://localhost:8001"
 WS_URL = "ws://localhost:8001/ws/availability"
 REDIS_HOST = "localhost"
 REDIS_PORT = 6379
 
 _BASE_TS = int(time.time())
 _WS_TIMEOUT = 5.0
-_HOLD_DATE = "2035-08.01"
+_HOLD_DATE = "2035-08-01"
 _HOLD_TTL_S = 60
 
 # CLIENT REDIS PER EFFETTUARE LE VARIE VERIFICHE
@@ -59,14 +59,14 @@ def _release_msg(user_id: str, field_id: int, slots: list) -> str:
     })
 
 def _hold_key(field_id: int, slot: str) -> str:
-    return f"Hold:{field_id}:{_HOLD_DATE}:{slot}"
+    return f"hold:{field_id}:{_HOLD_DATE}:{slot}"
 
 @pytest.mark.asyncio(loop_scope="module")
 class TestTemporaryHold:
 
     # HOLD PROPAGATO A TUTTI I CLIENT (MITTENTE INCLUSO)
     async def test_hold_slots_broadcast_to_all_clients(self, hold_field_id):
-        slot = "10.00"
+        slot = "10:00"
         user_a = f"user_hold_a_{_BASE_TS}"
 
         async with (websockets.connect(WS_URL) as ws_a, websockets.connect(WS_URL) as ws_b):
@@ -110,7 +110,7 @@ class TestTemporaryHold:
 
     # HOLD SCRIVE LA CHIAVE REDIS CON IL TTL CORRETTO
     async def test_hold_writes_redis_key_with_correct_ttl(self, hold_field_id, redis_client):
-        slot = "12.00"
+        slot = "12:00"
         key = _hold_key(hold_field_id, slot)
         await redis_client.delete(key)
 
@@ -121,7 +121,7 @@ class TestTemporaryHold:
         exists = await redis_client.exists(key)
         assert exists == 1, f"Redis Key '{key}' not found after hold_slots"
 
-        ttl = await redis_client.exists(key)
+        ttl = await redis_client.ttl(key)
         assert 50 <= ttl <= _HOLD_TTL_S
 
     # RELEASE RIMUOVE LA CHIAVE REDIS CREATA
@@ -147,7 +147,7 @@ class TestTemporaryHold:
 
     # GET /bookings/holds DEVE RESTITUIRE GLI SLOT ATTIVI
     async def test_get_holds_endpoint_returns_active_holds(self, hold_field_id, redis_client):
-        slot = "14.00"
+        slot = "14:00"
         key = _hold_key(hold_field_id, slot)
         user_id = f"user_holds_ep_{_BASE_TS}"
         await redis_client.delete(key)

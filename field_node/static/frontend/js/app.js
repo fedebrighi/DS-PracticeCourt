@@ -244,9 +244,16 @@ function updateSlotHighlights(){
 
         /* CONTROLLO SE LO SLOT È BLOCCATO DA ALTRI*/
         const isHeld = state.heldByOthers[`${state.selectedFieldId}:${state.selectedDate}:${pill.dataset.time}`];
+        const wasHeld = pill.classList.contains('slot-pill--held');
+
         pill.classList.toggle('slot-pill--selected', selected);
         pill.classList.toggle('slot-pill--held',  !!isHeld && !selected);
         pill.disabled = !!isHeld && !selected;
+
+        if(wasHeld && !isHeld && !pill.dataset.listenerAttached){
+            pill.addEventListener('click', ()=> handleSlotClick(pill.dataset.time));
+            pill.dataset.listenerAttached = true;
+        }
 
         pill.setAttribute('aria-pressed', selected ? 'true' : 'false');
     });
@@ -361,6 +368,7 @@ async function renderSlots(resetHolds=true){
 
             if (!taken && !isHeld) {
                 pill.addEventListener('click', () => handleSlotClick(slotTime));
+                pill.dataset.listenerAttached = true;
             }
             dom.slotGrid.appendChild(pill);
         });
@@ -375,14 +383,33 @@ async function renderSlots(resetHolds=true){
     }
 }
 
+/*RILASCIA GLI HOLD ATTIVI PRIMA DI CAMBIARE CAMPO O DATA*/
+function releaseActiveHolds(){
+    if(state.selectedSlots.length === 0) return;
+
+    const slotsToRelease = state.selectedSlots.length === 2 ? generateTimeSlots().filter(s =>
+        slotToMinutes(s) >= slotToMinutes(state.selectedSlots[0]) && slotToMinutes(s) <= slotToMinutes(state.selectedSlots[1])) : [state.selectedSlots[0]];
+    sendWsAction("release_slots", slotsToRelease);
+    if(holdTimer){
+        clearTimeout(holdTimer);
+        holdTimer = null;
+    }
+}
+
+window.addEventListener('beforeunload', ()=>{
+    releaseActiveHolds();
+})
+
+/* LISTENER SPORT CON ANTEPRIMA GRANDE */
 dom.sportSelect.addEventListener('change', () =>{
+    releaseActiveHolds();
     const selectedFieldId = parseInt(dom.sportSelect.value);
     const field = state.fields.find(f => f.id === selectedFieldId);
     const previewImg = document.getElementById('sport-preview-img');
     const previewContainer = document.getElementById('sport-preview');
 
     if (field && field.sport_type) {
-        previewImg.src = `imgs/${field.sport_type}.png`; // es: imgs/football.png
+        previewImg.src = `../imgs/${field.sport_type}.png`;
         previewContainer.removeAttribute('hidden');
     } else {
         previewContainer.setAttribute('hidden', '');
@@ -394,6 +421,7 @@ dom.sportSelect.addEventListener('change', () =>{
 });
 
 dom.dateInput.addEventListener('change', () =>{
+    releaseActiveHolds();
     state.selectedDate = dom.dateInput.value || null;
     state.selectedSlots = [];
     calculateTotal();
@@ -482,26 +510,6 @@ function addFeedEvent(event){
         dom.feedList.removeChild(dom.feedList.lastChild);
     }
 }
-
-/* LISTENER SPORT CON ANTEPRIMA GRANDE */
-dom.sportSelect.addEventListener('change', () => {
-    const selectedFieldId = parseInt(dom.sportSelect.value);
-    const field = state.fields.find(f => f.id === selectedFieldId);
-    const previewImg = document.getElementById('sport-preview-img');
-    const previewContainer = document.getElementById('sport-preview');
-
-    if (field && field.sport_type) {
-        previewImg.src = `../imgs/${field.sport_type}.png`;
-        show(previewContainer);
-    } else {
-        hide(previewContainer);
-    }
-
-    state.selectedFieldId = selectedFieldId || null;
-    state.selectedSlots = [];
-    calculateTotal();
-    if(state.selectedFieldId && state.selectedDate) renderSlots();
-});
 
 /* GESTIONE DELLE WEBSOCKET */
 
@@ -694,6 +702,10 @@ async function confirmBooking(){
         const data = await res.json();
 
         if(data.status === 'confirmed'){
+            const slotsToRelease = generateTimeSlots().filter( s=>
+                slotToMinutes(s) >= slotToMinutes(startSlot) && slotToMinutes(s) <= slotToMinutes(endSlot)
+            );
+            sendWsAction("release_slots", slotsToRelease);
             setBtnState('success');
 
             setTimeout(()=>{

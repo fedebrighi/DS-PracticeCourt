@@ -4,11 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Restructured test_concurrency.py as a pytest">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed problem of race condition and problem of timezone import">
+      <change afterPath="$PROJECT_DIR$/tests/test_temporary_hold.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field_node/app/repositories/field_booking_repository.py" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/app/repositories/field_booking_repository.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_concurrency.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_concurrency.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,13 +14,13 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="EmbeddingIndexingInfo">
-    <option name="cachedIndexableFilesCount" value="67" />
+    <option name="cachedIndexableFilesCount" value="68" />
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Python Script" />
         <option value="CSS File" />
+        <option value="Python Script" />
       </list>
     </option>
   </component>
@@ -46,7 +44,7 @@
     <urls />
   </component>
   <component name="ProblemsViewState">
-    <option name="selectedTabId" value="DEPENDENCY_CHECKER_PROBLEMS_TAB" />
+    <option name="selectedTabId" value="CurrentFile" />
   </component>
   <component name="ProjectCodeStyleSettingsMigration">
     <option name="version" value="2" />
@@ -63,38 +61,82 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;ModuleVcsDetector.initialDetectionPerformed&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.MCP Project settings loaded&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.git.unshallow&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.typescript.service.memoryLimit.init&quot;: &quot;true&quot;,
-    &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
-    &quot;codeWithMe.voiceChat.enabledByDefault&quot;: &quot;false&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/home/federico/Scrivania/DS-PracticeCourt/pyproject.toml&quot;,
-    &quot;list.type.of.created.stylesheet&quot;: &quot;CSS&quot;,
-    &quot;node.js.detected.package.eslint&quot;: &quot;true&quot;,
-    &quot;node.js.detected.package.tslint&quot;: &quot;true&quot;,
-    &quot;node.js.selected.package.eslint&quot;: &quot;(autodetect)&quot;,
-    &quot;node.js.selected.package.tslint&quot;: &quot;(autodetect)&quot;,
-    &quot;nodejs_package_manager_path&quot;: &quot;npm&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
-    &quot;project.structure.proportion&quot;: &quot;0.15&quot;,
-    &quot;project.structure.side.proportion&quot;: &quot;0.31494254&quot;,
-    &quot;settings.editor.selected.configurable&quot;: &quot;preferences.pluginManager&quot;,
-    &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "ModuleVcsDetector.initialDetectionPerformed": "true",
+    "Python tests.Python tests for tests.test_temporary_hold.TestTemporaryHold.executor": "Run",
+    "Python tests.Python tests for tests.test_temporary_hold.TestTemporaryHold.test_hold_slots_broadcast_to_all_clients.executor": "Run",
+    "RunOnceActivity.MCP Project settings loaded": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.TerminalTabsStorage.copyFrom.TerminalArrangementManager.252": "true",
+    "RunOnceActivity.git.unshallow": "true",
+    "RunOnceActivity.typescript.service.memoryLimit.init": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "codeWithMe.voiceChat.enabledByDefault": "false",
+    "git-widget-placeholder": "main",
+    "kotlin-language-version-configured": "true",
+    "last_opened_file_path": "/home/federico/Scrivania/DS-PracticeCourt/pyproject.toml",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm",
+    "project.structure.last.edited": "Modules",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.31494254",
+    "settings.editor.selected.configurable": "preferences.pluginManager",
+    "vue.rearranger.settings.migration": "true"
   },
-  &quot;keyToStringList&quot;: {
-    &quot;DatabaseDriversLRU&quot;: [
-      &quot;mysql&quot;
+  "keyToStringList": {
+    "DatabaseDriversLRU": [
+      "mysql"
     ]
   }
-}</component>
+}]]></component>
+  <component name="RunManager" selected="Python tests.Python tests for tests.test_temporary_hold.TestTemporaryHold">
+    <configuration name="Python tests for tests.test_temporary_hold.TestTemporaryHold" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="DS-PracticeCourt" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <option name="RUN_TOOL" value="" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests.test_temporary_hold.TestTemporaryHold&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <configuration name="Python tests for tests.test_temporary_hold.TestTemporaryHold.test_hold_slots_broadcast_to_all_clients" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
+      <module name="DS-PracticeCourt" />
+      <option name="ENV_FILES" value="" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="DEBUG_JUST_MY_CODE" value="false" />
+      <option name="RUN_TOOL" value="" />
+      <option name="_new_additionalArguments" value="&quot;&quot;" />
+      <option name="_new_target" value="&quot;tests.test_temporary_hold.TestTemporaryHold.test_hold_slots_broadcast_to_all_clients&quot;" />
+      <option name="_new_targetType" value="&quot;PYTHON&quot;" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python tests.Python tests for tests.test_temporary_hold.TestTemporaryHold" />
+        <item itemvalue="Python tests.Python tests for tests.test_temporary_hold.TestTemporaryHold.test_hold_slots_broadcast_to_all_clients" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -145,15 +187,8 @@
       <workItem from="1776786087115" duration="9404000" />
       <workItem from="1776848197631" duration="5181000" />
       <workItem from="1776957822381" duration="11270000" />
-      <workItem from="1777213274144" duration="4718000" />
-    </task>
-    <task id="LOCAL-00042" summary="Modified pyproject.toml adding asyncio-mode = &quot;auto&quot; to fix test errors">
-      <option name="closed" value="true" />
-      <created>1775936400422</created>
-      <option name="number" value="00042" />
-      <option name="presentableId" value="LOCAL-00042" />
-      <option name="project" value="LOCAL" />
-      <updated>1775936400422</updated>
+      <workItem from="1777213274144" duration="4769000" />
+      <workItem from="1777313295805" duration="5270000" />
     </task>
     <task id="LOCAL-00043" summary="Modified this files to fix errors occurred while testing">
       <option name="closed" value="true" />
@@ -539,14 +574,21 @@
       <option name="project" value="LOCAL" />
       <updated>1777216665646</updated>
     </task>
-    <option name="localTasksCounter" value="91" />
+    <task id="LOCAL-00091" summary="Fixed problem of race condition and problem of timezone import">
+      <option name="closed" value="true" />
+      <created>1777218055008</created>
+      <option name="number" value="00091" />
+      <option name="presentableId" value="LOCAL-00091" />
+      <option name="project" value="LOCAL" />
+      <updated>1777218055008</updated>
+    </task>
+    <option name="localTasksCounter" value="92" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Created basic js functions to handle date and time in booking slots" />
     <MESSAGE value="Added other function with loading of fields + utilities" />
     <MESSAGE value="Added other function focussing on slots" />
     <MESSAGE value="Added other function focussing on feed and websocket" />
@@ -571,7 +613,8 @@
     <MESSAGE value="Fixed some errors, but the function is still not working" />
     <MESSAGE value="Finally fixed the problem of the holding bookings" />
     <MESSAGE value="Restructured test_concurrency.py as a pytest" />
-    <option name="LAST_COMMIT_MESSAGE" value="Restructured test_concurrency.py as a pytest" />
+    <MESSAGE value="Fixed problem of race condition and problem of timezone import" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed problem of race condition and problem of timezone import" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

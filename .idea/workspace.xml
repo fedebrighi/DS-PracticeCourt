@@ -4,11 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed problem of race condition and problem of timezone import">
-      <change beforePath="$PROJECT_DIR$/.idea/dataSources.local.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/dataSources.local.xml" afterDir="false" />
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Fixed problems about tests">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/field_node/static/frontend/js/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/test_temporary_hold.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/test_temporary_hold.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -191,14 +188,7 @@
       <workItem from="1776957822381" duration="11270000" />
       <workItem from="1777213274144" duration="4769000" />
       <workItem from="1777313295805" duration="5270000" />
-    </task>
-    <task id="LOCAL-00044" summary="Added initial skeleton structure + navbar to the frontend page">
-      <option name="closed" value="true" />
-      <created>1776084455929</created>
-      <option name="number" value="00044" />
-      <option name="presentableId" value="LOCAL-00044" />
-      <option name="project" value="LOCAL" />
-      <updated>1776084455929</updated>
+      <workItem from="1777468022109" duration="2371000" />
     </task>
     <task id="LOCAL-00045" summary="Added tokens.css to define the generical specifics of the style of the webpage">
       <option name="closed" value="true" />
@@ -584,14 +574,21 @@
       <option name="project" value="LOCAL" />
       <updated>1777394846787</updated>
     </task>
-    <option name="localTasksCounter" value="93" />
+    <task id="LOCAL-00093" summary="Fixed problems about tests">
+      <option name="closed" value="true" />
+      <created>1777395979497</created>
+      <option name="number" value="00093" />
+      <option name="presentableId" value="LOCAL-00093" />
+      <option name="project" value="LOCAL" />
+      <updated>1777395979498</updated>
+    </task>
+    <option name="localTasksCounter" value="94" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added other function with loading of fields + utilities" />
     <MESSAGE value="Added other function focussing on slots" />
     <MESSAGE value="Added other function focussing on feed and websocket" />
     <MESSAGE value="Added other function focussing on validating user and booking" />
@@ -616,7 +613,8 @@
     <MESSAGE value="Finally fixed the problem of the holding bookings" />
     <MESSAGE value="Restructured test_concurrency.py as a pytest" />
     <MESSAGE value="Fixed problem of race condition and problem of timezone import" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed problem of race condition and problem of timezone import" />
+    <MESSAGE value="Fixed problems about tests" />
+    <option name="LAST_COMMIT_MESSAGE" value="Fixed problems about tests" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

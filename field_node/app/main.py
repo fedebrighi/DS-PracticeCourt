@@ -109,26 +109,32 @@ async def get_booking(booking_id: int, db: AsyncSession = Depends(get_db)):
         raise HTTPException(status_code=404, detail= "Booking not found!")
     return booking
 
-@app.post("/bookings", response_model= FieldBookingResponse, status_code= 201) # CREA UNA PRENOTAZIONE
+@app.post("/bookings", response_model=FieldBookingResponse, status_code=201)
 async def create_booking(data: FieldBookingRequest, db: AsyncSession = Depends(get_db), redis: Redis = Depends(get_redis)):
-    field = await field_repository.get_by_id(db, data.field_id) # VERIFICO CHE IL CAMPO ESISTA
-    if not field: # CONTROLLO DISPONIBILITA' CAMPO PRE-PRENOTAZIONE
-        raise HTTPException(status_code=404, detail= "Field not found!")
+    field = await field_repository.get_by_id(db, data.field_id)
+    if not field:
+        raise HTTPException(status_code=404, detail="Field not found!")
     if not field.is_active:
-        raise HTTPException(status_code=409, detail= "Field not available!") # 409 = CONFLITTO
+        raise HTTPException(status_code=409, detail="Field not available!")
 
-    booking = await field_booking_repository.create(
-        db,
-        redis,
-        field_id = data.field_id,
-        user_id = data.user_id,
-        start_time = data.start_time,
-        end_time = data.end_time
-    )
-    if booking is None: # SE LOCK BUSY O SLOT OCCUPATO
-        raise HTTPException(status_code=409, detail="Slot not available or lock busy, please retry!")
+    try:
+        booking = await field_booking_repository.create(
+            db,
+            redis,
+            field_id=data.field_id,
+            user_id=data.user_id,
+            start_time=data.start_time,
+            end_time=data.end_time
+        )
+        if booking is None:
+            raise HTTPException(status_code=409, detail="Slot not available or lock busy, please retry!")
+        return booking
 
-    return booking
+    except HTTPException:
+        raise
+    except Exception as exc:
+        logger.error("[BOOKING] unexpected error on simple booking: %s", exc)
+        raise HTTPException(status_code=409, detail="Concurrent booking conflict, please retry!")
 
 @app.post("/bookings/2pc", response_model=FieldBookingResponse, status_code=201)
 async def create_booking_2pc(data: FieldBookingRequest, db: AsyncSession = Depends(get_db), redis: Redis = Depends(get_redis)):

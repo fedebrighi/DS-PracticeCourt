@@ -68,6 +68,7 @@ services:
     volumes:
       - ./shared:/app/shared
       - ./field_node/static:/app/static
+      - ./tests:/app/tests
       - /etc/localtime:/etc/localtime:ro
     depends_on:
       mysql:

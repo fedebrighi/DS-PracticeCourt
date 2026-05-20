@@ -5,10 +5,13 @@ import httpx
 import pytest
 import websockets
 import json
+import os
 
-FIELD_URL = "http://localhost:8001"
-UTILITY_URL = "http://localhost:8002"
-WS_URL = "ws://localhost:8001/ws/availability"
+FIELD_URL = os.getenv("FIELD_NODE_URL", "http://field_node:8001")
+UTILITY_URL = os.getenv("UTILITY_NODE_URL", "http://utility_node:8002")
+REDIS_HOST = os.getenv("REDIS_HOST", "redis")
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+WS_URL = os.getenv("WS_URL", "ws://field_node:8001/ws/availability")
 _BASE_TS = int(time.time())
 _WS_TIMEOUT = 5.0
 
@@ -32,7 +35,7 @@ def active_field_id():
 def active_utility_id():
     r = httpx.post(f"{UTILITY_URL}/utilities", json={
         "name": f"Luci WS {_BASE_TS}",
-        "sport_type": "Lighting",
+        "utility_type": "Lighting",
         "price_per_hour": 4.0,
         "is_active": True,
     })

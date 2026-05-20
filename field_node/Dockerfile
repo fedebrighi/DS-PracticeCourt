@@ -13,11 +13,12 @@ RUN pip install --no-cache-dir "poetry==$POETRY_VERSION"
 
 COPY pyproject.toml poetry.lock ./
 
-RUN poetry install --only main --no-root && \
+RUN poetry install --with dev --no-root && \
     pip install --force-reinstall --no-cache-dir "redis==7.4.0"
 
 COPY shared/ ./shared/
 COPY field_node/app/ ./app/
+COPY field_node/ ./field_node/
 
 EXPOSE 8001
 

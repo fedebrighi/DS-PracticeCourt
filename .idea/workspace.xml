@@ -4,9 +4,8 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Added class diagram for the relation">
+    <list default="true" id="7a250fef-87ba-4a71-8f1b-f81aa2107bb6" name="Changes" comment="Simplified sequence diagram for relation">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/infrastructure/diagrams/2pc_sequence_diagram.md" beforeDir="false" afterPath="$PROJECT_DIR$/infrastructure/diagrams/2pc_sequence_diagram.md" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -187,14 +186,6 @@
       <workItem from="1777213274144" duration="4769000" />
       <workItem from="1777313295805" duration="5270000" />
       <workItem from="1777468022109" duration="2371000" />
-    </task>
-    <task id="LOCAL-00046" summary="Added navbar.css to add css style to the navbar in the frontend page">
-      <option name="closed" value="true" />
-      <created>1776095149419</created>
-      <option name="number" value="00046" />
-      <option name="presentableId" value="LOCAL-00046" />
-      <option name="project" value="LOCAL" />
-      <updated>1776095149419</updated>
     </task>
     <task id="LOCAL-00047" summary="Modified the background of the navbar with a linear gradient">
       <option name="closed" value="true" />
@@ -580,14 +571,21 @@
       <option name="project" value="LOCAL" />
       <updated>1778871142225</updated>
     </task>
-    <option name="localTasksCounter" value="95" />
+    <task id="LOCAL-00095" summary="Simplified sequence diagram for relation">
+      <option name="closed" value="true" />
+      <created>1778943813712</created>
+      <option name="number" value="00095" />
+      <option name="presentableId" value="LOCAL-00095" />
+      <option name="project" value="LOCAL" />
+      <updated>1778943813712</updated>
+    </task>
+    <option name="localTasksCounter" value="96" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
   </component>
   <component name="VcsManagerConfiguration">
-    <MESSAGE value="Added other function focussing on feed and websocket" />
     <MESSAGE value="Added other function focussing on validating user and booking" />
     <MESSAGE value="Fixed some errors on js" />
     <MESSAGE value="Fixed some errors about the frontend page" />
@@ -612,7 +610,8 @@
     <MESSAGE value="Fixed problem of race condition and problem of timezone import" />
     <MESSAGE value="Fixed problems about tests" />
     <MESSAGE value="Added class diagram for the relation" />
-    <option name="LAST_COMMIT_MESSAGE" value="Added class diagram for the relation" />
+    <MESSAGE value="Simplified sequence diagram for relation" />
+    <option name="LAST_COMMIT_MESSAGE" value="Simplified sequence diagram for relation" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>

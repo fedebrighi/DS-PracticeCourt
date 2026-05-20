@@ -6,11 +6,12 @@ import pytest
 import pytest_asyncio
 import websockets
 from redis.asyncio import Redis as AsyncRedis
+import os
 
-FIELD_URL = "http://localhost:8001"
-WS_URL = "ws://localhost:8001/ws/availability"
-REDIS_HOST = "localhost"
-REDIS_PORT = 6379
+FIELD_URL = os.getenv("FIELD_NODE_URL", "http://field_node:8001")
+WS_URL = os.getenv("WS_URL", "ws://field_node:8001/ws/availability")
+REDIS_HOST = os.getenv("REDIS_HOST", "redis")
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
 
 _BASE_TS = int(time.time())
 _WS_TIMEOUT = 5.0

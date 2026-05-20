@@ -3,8 +3,10 @@ import time
 import httpx
 import pytest
 
-FIELD_URL = "http://localhost:8001"
-UTILITY_URL = "http://localhost:8002"
+import os
+
+FIELD_URL = os.getenv("FIELD_NODE_URL", "http://field_node:8001")
+UTILITY_URL = os.getenv("UTILITY_NODE_URL", "http://utility_node:8002")
 _BASE_TS = int(time.time())
 
 # UNICO SLOT TEMPORALE COMUNE

@@ -2,8 +2,13 @@ import time
 
 import pytest
 import httpx
+import os
 
-UTILITY_BASE = "http://localhost:8002"
+FIELD_URL = os.getenv("FIELD_NODE_URL", "http://field_node:8001")
+UTILITY_BASE = os.getenv("UTILITY_NODE_URL", "http://utility_node:8002")
+REDIS_HOST = os.getenv("REDIS_HOST", "redis")
+REDIS_PORT = int(os.getenv("REDIS_PORT", "6379"))
+WS_URL = os.getenv("WS_URL", "ws://field_node:8001/ws/availability")
 
 # CREO UNA UTILITY ATTIVA E UNA INATTIVA PRIMA DI FARE I TEST
 
